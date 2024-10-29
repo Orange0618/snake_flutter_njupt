@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'ai.dart';
 
 void main() {
   runApp(SnakeGame());
@@ -11,7 +12,7 @@ class SnakeGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '贪吃蛇游dadaw戏',
+      title: '贪吃蛇游戏',
       theme: ThemeData(primarySwatch: Colors.green),
       home: MainPage(), // 主页面入口
     );
@@ -91,6 +92,18 @@ class MenuPage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
+                  MaterialPageRoute(
+                    builder: (context) => GamePage(mode: "AI"),
+                  ),
+                );
+              },
+              child: Text("教学模式"),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
                   MaterialPageRoute(builder: (context) => HighScorePage()),
                 );
               },
@@ -113,18 +126,19 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-  static const int rowCount = 30;
-  static const int columnCount = 20;
+  static const int rowCount = 40;
+  static const int columnCount = 40;
   static int highScore = 0;
 
   List<Point<int>> snake = [Point(0, 0), Point(1, 0), Point(2, 0)];
   int direction = 1; // 0:上, 1:右, 2:下, 3:左
-  Point<int> food = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+  Point<int> food =
+      Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
   List<Point<int>> obstacles = [];
   Timer? timer;
   bool isPaused = false;
   int speed = 300; // 初始速度
-  int score = 0;   // 当前得分
+  int score = 0; // 当前得分
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -139,6 +153,9 @@ class _GamePageState extends State<GamePage> {
     if (widget.mode == "hell") {
       obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
       speed = 150; // 地狱模式更快速度
+    } else if (widget.mode == "AI") {
+      obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
+      speed = 150; // 地狱模式更快速度
     } else {
       obstacles = generateObstacles(5); // 普通模式障碍物数量减少为 5
       speed = 300; // 普通模式速度较慢
@@ -150,8 +167,11 @@ class _GamePageState extends State<GamePage> {
     for (int i = 0; i < count; i++) {
       Point<int> obstacle;
       do {
-        obstacle = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
-      } while (snake.contains(obstacle) || obstacle == food || obstacles.contains(obstacle));
+        obstacle =
+            Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+      } while (snake.contains(obstacle) ||
+          obstacle == food ||
+          obstacles.contains(obstacle));
       obstacles.add(obstacle);
     }
     return obstacles;
@@ -225,7 +245,8 @@ class _GamePageState extends State<GamePage> {
 
   bool checkCollision() {
     Point<int> head = snake.last;
-    if (head.x < 0 || head.x >= columnCount || head.y < 0 || head.y >= rowCount) return true;
+    if (head.x < 0 || head.x >= columnCount || head.y < 0 || head.y >= rowCount)
+      return true;
     if (snake.sublist(0, snake.length - 1).contains(head)) return true;
     if (obstacles.contains(head)) return true;
     return false;
@@ -262,11 +283,14 @@ class _GamePageState extends State<GamePage> {
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowUp && direction != 2) {
         direction = 0;
-      } else if (event.logicalKey == LogicalKeyboardKey.arrowRight && direction != 3) {
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowRight &&
+          direction != 3) {
         direction = 1;
-      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown && direction != 0) {
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
+          direction != 0) {
         direction = 2;
-      } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft && direction != 1) {
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft &&
+          direction != 1) {
         direction = 3;
       } else if (event.logicalKey == LogicalKeyboardKey.space) {
         togglePause();
@@ -294,46 +318,46 @@ class _GamePageState extends State<GamePage> {
         child: Column(
           children: [
             Expanded(
-  child: GridView.builder(
-    itemCount: rowCount * columnCount,
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: columnCount,
-    ),
-    itemBuilder: (BuildContext context, int index) {
-      int x = index % columnCount;
-      int y = index ~/ columnCount;
-      Point<int> point = Point(x, y);
-      
-      if (point == snake.last) {
-        // 渲染蛇头
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/head.jpeg'),
-              fit: BoxFit.cover,
+              child: GridView.builder(
+                itemCount: rowCount * columnCount,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: columnCount,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  int x = index % columnCount;
+                  int y = index ~/ columnCount;
+                  Point<int> point = Point(x, y);
+
+                  if (point == snake.last) {
+                    // 渲染蛇头
+                    return Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/head.jpeg'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  } else if (snake.contains(point)) {
+                    // 渲染蛇身体
+                    return Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/body.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  } else if (point == food) {
+                    return Container(color: Colors.red);
+                  } else if (obstacles.contains(point)) {
+                    return Container(color: Colors.black);
+                  } else {
+                    return Container(color: Colors.grey[200]);
+                  }
+                },
+              ),
             ),
-          ),
-        );
-      } else if (snake.contains(point)) {
-        // 渲染蛇身体
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/body.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
-        );
-      } else if (point == food) {
-        return Container(color: Colors.red);
-      } else if (obstacles.contains(point)) {
-        return Container(color: Colors.black);
-      } else {
-        return Container(color: Colors.grey[200]);
-      }
-    },
-  ),
-),
             if (isPaused)
               Padding(
                 padding: const EdgeInsets.all(8.0),
