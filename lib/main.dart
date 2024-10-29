@@ -11,33 +11,42 @@ class SnakeGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '贪吃蛇游dadaw戏',
+      title: '贪吃蛇游戏',
       theme: ThemeData(primarySwatch: Colors.green),
       home: MainPage(), // 主页面入口
     );
   }
 }
 
+
 // 主页面
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MenuPage()),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-            backgroundColor: Colors.green,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/mainpage_back.jpg'), // 设置背景图片
+            fit: BoxFit.cover, // 图片填充整个页面
           ),
-          child: Text(
-            "开始游戏",
-            style: TextStyle(fontSize: 24, color: Colors.white),
+        ),
+        child: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MenuPage()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              backgroundColor: Colors.green,
+            ),
+            child: Text(
+              "开始游戏",
+              style: TextStyle(fontSize: 24, color: Colors.white),
+            ),
           ),
         ),
       ),
@@ -363,14 +372,13 @@ class _GamePageState extends State<GamePage> {
                       return LayoutBuilder(
                         builder: (context, constraints) {
                           return Container(
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons
-                                  .fastfood, // or any other icon of your choice
-                              color: Colors.red,
-                              size: constraints.maxWidth, // Adjust the multiplier as needed
-                            ),
-                          );
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/food.png'),
+              fit: BoxFit.cover,
+            ),
+          )
+          );
                         },
                       );
                     } else if (obstacles.contains(point)) {
