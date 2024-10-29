@@ -119,12 +119,13 @@ class _GamePageState extends State<GamePage> {
 
   List<Point<int>> snake = [Point(0, 0), Point(1, 0), Point(2, 0)];
   int direction = 1; // 0:上, 1:右, 2:下, 3:左
-  Point<int> food = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+  Point<int> food =
+      Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
   List<Point<int>> obstacles = [];
   Timer? timer;
   bool isPaused = false;
   int speed = 300; // 初始速度
-  int score = 0;   // 当前得分
+  int score = 0; // 当前得分
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -150,8 +151,11 @@ class _GamePageState extends State<GamePage> {
     for (int i = 0; i < count; i++) {
       Point<int> obstacle;
       do {
-        obstacle = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
-      } while (snake.contains(obstacle) || obstacle == food || obstacles.contains(obstacle));
+        obstacle =
+            Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+      } while (snake.contains(obstacle) ||
+          obstacle == food ||
+          obstacles.contains(obstacle));
       obstacles.add(obstacle);
     }
     return obstacles;
@@ -225,7 +229,8 @@ class _GamePageState extends State<GamePage> {
 
   bool checkCollision() {
     Point<int> head = snake.last;
-    if (head.x < 0 || head.x >= columnCount || head.y < 0 || head.y >= rowCount) return true;
+    if (head.x < 0 || head.x >= columnCount || head.y < 0 || head.y >= rowCount)
+      return true;
     if (snake.sublist(0, snake.length - 1).contains(head)) return true;
     if (obstacles.contains(head)) return true;
     return false;
@@ -259,18 +264,23 @@ class _GamePageState extends State<GamePage> {
   }
 
   void onKeyPress(RawKeyEvent event) {
+    // ignore: deprecated_member_use
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowUp && direction != 2) {
         direction = 0;
-      } else if (event.logicalKey == LogicalKeyboardKey.arrowRight && direction != 3) {
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowRight &&
+          direction != 3) {
         direction = 1;
-      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown && direction != 0) {
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
+          direction != 0) {
         direction = 2;
-      } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft && direction != 1) {
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft &&
+          direction != 1) {
         direction = 3;
       } else if (event.logicalKey == LogicalKeyboardKey.space) {
         togglePause();
       }
+      return;
     }
   }
 
@@ -287,62 +297,100 @@ class _GamePageState extends State<GamePage> {
           },
         ),
       ),
-      body: RawKeyboardListener(
-        focusNode: _focusNode,
+      body: Focus(
         autofocus: true,
-        onKey: onKeyPress,
-        child: Column(
-          children: [
-            Expanded(
-  child: GridView.builder(
-    itemCount: rowCount * columnCount,
-    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: columnCount,
-    ),
-    itemBuilder: (BuildContext context, int index) {
-      int x = index % columnCount;
-      int y = index ~/ columnCount;
-      Point<int> point = Point(x, y);
-      
-      if (point == snake.last) {
-        // 渲染蛇头
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/head.jpeg'),
-              fit: BoxFit.cover,
-            ),
-          ),
-        );
-      } else if (snake.contains(point)) {
-        // 渲染蛇身体
-        return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/body.png'),
-              fit: BoxFit.cover,
-            ),
-          ),
-        );
-      } else if (point == food) {
-        return Container(color: Colors.red);
-      } else if (obstacles.contains(point)) {
-        return Container(color: Colors.black);
-      } else {
-        return Container(color: Colors.grey[200]);
-      }
-    },
-  ),
-),
-            if (isPaused)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "游戏已暂停 (按空格继续)",
-                  style: TextStyle(fontSize: 18, color: Colors.red),
+        onKey: (FocusNode node, RawKeyEvent event) {
+          // Intercept the arrow keys and prevent focus change
+          if (event is RawKeyDownEvent) {
+            if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
+                direction != 2) {
+              direction = 0;
+            } else if (event.logicalKey == LogicalKeyboardKey.arrowRight &&
+                direction != 3) {
+              direction = 1;
+            } else if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
+                direction != 0) {
+              direction = 2;
+            } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft &&
+                direction != 1) {
+              direction = 3;
+            } else if (event.logicalKey == LogicalKeyboardKey.space) {
+              togglePause();
+            }
+            return KeyEventResult.handled; // Mark the event as handled
+          }
+          return KeyEventResult.ignored; // Ignore other events
+        },
+        child: RawKeyboardListener(
+          focusNode: _focusNode,
+          autofocus: true,
+          onKey: (RawKeyEvent
+              event) {}, // Keep empty, as `Focus` now handles events
+          child: Column(
+            children: [
+              Expanded(
+                child: GridView.builder(
+                  itemCount: rowCount * columnCount,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columnCount,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    int x = index % columnCount;
+                    int y = index ~/ columnCount;
+                    Point<int> point = Point(x, y);
+
+                    if (point == snake.last) {
+                      // Render snake head
+                      return Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/head.jpeg'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    } else if (snake.contains(point)) {
+                      // Render snake body
+                      return Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/body.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    } else if (point == food) {
+                      return LayoutBuilder(
+                        builder: (context, constraints) {
+                          return Container(
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons
+                                  .fastfood, // or any other icon of your choice
+                              color: Colors.red,
+                              size: constraints.maxWidth, // Adjust the multiplier as needed
+                            ),
+                          );
+                        },
+                      );
+                    } else if (obstacles.contains(point)) {
+                      return Container(color: Colors.black);
+                    } else {
+                      return Container(color: Colors.grey[200]);
+                    }
+                  },
                 ),
               ),
-          ],
+              if (isPaused)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "游戏已暂停 (按空格继续)",
+                    style: TextStyle(fontSize: 18, color: Colors.red),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
