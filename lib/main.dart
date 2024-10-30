@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'ai.dart';
-import 'dart:ui' as ui;
 
 void main() {
   runApp(SnakeGame());
@@ -223,10 +221,10 @@ class GamePage extends StatefulWidget {
   GamePage({required this.mode});
 
   @override
-  _GamePageState createState() => _GamePageState();
+  GamePageState createState() => GamePageState();
 }
 
-class _GamePageState extends State<GamePage> {
+class GamePageState extends State<GamePage> {
   static const int rowCount = 40;
   static const int columnCount = 40;
   static int highScore = 0;
@@ -358,8 +356,9 @@ class _GamePageState extends State<GamePage> {
 
   bool checkCollision() {
     Point<int> head = snake.last;
-    if (head.x < 0 || head.x >= columnCount || head.y < 0 || head.y >= rowCount)
+    if (head.x < 0 || head.x >= columnCount || head.y < 0 || head.y >= rowCount) {
       return true;
+    }
     if (snake.sublist(0, snake.length - 1).contains(head)) return true;
     if (obstacles.contains(head)) return true;
     return false;
@@ -396,9 +395,9 @@ class _GamePageState extends State<GamePage> {
     );
   }
 
-  void onKeyPress(RawKeyEvent event) {
+  void onKeyPress(KeyEvent event) {
     // ignore: deprecated_member_use
-    if (event is RawKeyDownEvent) {
+    if (event is KeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowUp && direction != 2) {
         direction = 0;
       } else if (event.logicalKey == LogicalKeyboardKey.arrowRight &&
@@ -459,9 +458,9 @@ class _GamePageState extends State<GamePage> {
       body: Center(
         child: Focus(
           autofocus: true,
-          onKey: (FocusNode node, RawKeyEvent event) {
+          onKeyEvent: (FocusNode node, KeyEvent event) {
             // Intercept the arrow keys and prevent focus change
-            if (event is RawKeyDownEvent) {
+            if (event is KeyDownEvent) {
               if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
                   direction != 2) {
                 direction = 0;
@@ -481,10 +480,10 @@ class _GamePageState extends State<GamePage> {
             }
             return KeyEventResult.ignored; // Ignore other events
           },
-          child: RawKeyboardListener(
+          child: KeyboardListener(
             focusNode: _focusNode,
             autofocus: true,
-            onKey: (RawKeyEvent
+            onKeyEvent: (KeyEvent
                 event) {}, // Keep empty, as `Focus` now handles events
             child: Column(
               children: [
@@ -603,7 +602,7 @@ class HighScorePage extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            "最高分：${_GamePageState.highScore}",
+            "最高分：${GamePageState.highScore}",
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
