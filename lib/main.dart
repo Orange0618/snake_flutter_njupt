@@ -15,7 +15,6 @@ class SnakeGame extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '贪吃蛇游戏',
-      title: '贪吃蛇游戏',
       theme: ThemeData(primarySwatch: Colors.green),
       home: MainPage(), // 主页面入口
     );
