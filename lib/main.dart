@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'ai.dart';
 import 'dart:ui' as ui;
 
-
 void main() {
   runApp(SnakeGame());
 }
@@ -256,7 +255,7 @@ class _GamePageState extends State<GamePage> {
     if (widget.mode == "hell") {
       obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
       speed = 150; // 地狱模式更快速度
-    }  else {
+    } else {
       obstacles = generateObstacles(5); // 普通模式障碍物数量减少为 5
       speed = 300; // 普通模式速度较慢
     }
@@ -436,7 +435,7 @@ class _GamePageState extends State<GamePage> {
               toggleAi();
             },
             child: Text(
-              "开启AI", // 替换为你的按钮文本
+              isAuto ? "关闭AI" : "开启AI", // 根据isAuto的值显示不同文本
               style: TextStyle(color: Colors.black), // 确保文本颜色可见
             ),
           ),
@@ -519,18 +518,16 @@ class _GamePageState extends State<GamePage> {
                     } else if (obstacles.contains(point)) {
                       return Container(
                         decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/obstacle.webp'),
-                          )
-                        ),
+                            image: DecorationImage(
+                          image: AssetImage('assets/obstacle.webp'),
+                        )),
                       );
                     } else {
                       return Container(
                         decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/ground.jpg'),
-                          )
-                        ),
+                            image: DecorationImage(
+                          image: AssetImage('assets/ground.jpg'),
+                        )),
                       );
                     }
                   },

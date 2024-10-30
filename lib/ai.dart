@@ -106,8 +106,7 @@ int aStarPathfinding(rowCount, columnCount, List<Point<int>> obstacles,
       }
     }
   }
-
-  return 1; // 没有路径
+  return 0; // 没有路径
 }
 
 int reconstructPath(Node current) {
