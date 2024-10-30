@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui' as ui; 
-
-
+import 'ai.dart';
+import 'dart:ui' as ui;
 
 void main() {
   runApp(SnakeGame());
@@ -21,7 +21,6 @@ class SnakeGame extends StatelessWidget {
   }
 }
 
-
 // 主页面
 class MainPage extends StatelessWidget {
   @override
@@ -35,10 +34,9 @@ class MainPage extends StatelessWidget {
           ),
         ),
         child: Center(
-          child:Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children:[
-                Stack(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Stack(
             alignment: Alignment.center,
             children: [
               ShaderMask(
@@ -78,8 +76,8 @@ class MainPage extends StatelessWidget {
               )
             ],
           ),
-              SizedBox(height: 50),
-              ElevatedButton(
+          SizedBox(height: 50),
+          ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
@@ -89,7 +87,7 @@ class MainPage extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
               backgroundColor: Colors.greenAccent,
-              shape:RoundedRectangleBorder(
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
               shadowColor: Colors.black.withOpacity(0.3),
@@ -100,9 +98,7 @@ class MainPage extends StatelessWidget {
               style: TextStyle(fontSize: 24, color: Colors.white),
             ),
           ),
-            ]
-          )
-        ),
+        ])),
       ),
     );
   }
@@ -113,113 +109,123 @@ class MenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("菜单"),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // 返回主页面
-          },
-        ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/menu_back2.webp'), // 设置背景图片
-            fit: BoxFit.cover, // 图片填充整个页面
+        appBar: AppBar(
+          title: Text("菜单"),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context); // 返回主页面
+            },
           ),
         ),
-        child: Center(
-          child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GamePage(mode: "normal"),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                backgroundColor: Colors.blueAccent,
-                shape:RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                shadowColor: Colors.black.withOpacity(0.3),
-                elevation: 8,
-              ),
-              child: Text(
-                "普通模式",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color:Colors.white,
-                ),
-              ),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/menu_back2.webp'), // 设置背景图片
+              fit: BoxFit.cover, // 图片填充整个页面
             ),
-            SizedBox(height: 20), // 按钮之间的间隔
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GamePage(mode: "hell"),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GamePage(mode: "normal"),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    backgroundColor: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadowColor: Colors.black.withOpacity(0.3),
+                    elevation: 8,
                   ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                  backgroundColor: Colors.redAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                  child: Text(
+                    "普通模式",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                  shadowColor: Colors.black.withOpacity(0.3),
-                  elevation: 8,
                 ),
-              child: Text(
-                "地狱模式",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                SizedBox(height: 20), // 按钮之间的间隔
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GamePage(mode: "hell"),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    backgroundColor: Colors.redAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadowColor: Colors.black.withOpacity(0.3),
+                    elevation: 8,
+                  ),
+                  child: Text(
+                    "地狱模式",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(height: 20), // 按钮之间的间隔
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GamePage(mode: "AI"),
+                      ),
+                    );
+                  },
+                  child: Text("教学模式"),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HighScorePage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    backgroundColor: Colors.greenAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadowColor: Colors.black.withOpacity(0.3),
+                    elevation: 8,
+                  ),
+                  child: Text(
+                    "最高分",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 20), // 按钮之间的间隔
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HighScorePage()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                backgroundColor: Colors.greenAccent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                shadowColor: Colors.black.withOpacity(0.3),
-                elevation: 8,
-              ),
-              child: Text(
-                "最高分",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      )
-      
-    );
+          ),
+        ));
   }
 }
 
@@ -233,8 +239,8 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-  static const int rowCount = 30;
-  static const int columnCount = 20;
+  static const int rowCount = 40;
+  static const int columnCount = 40;
   static int highScore = 0;
 
   List<Point<int>> snake = [Point(0, 0), Point(1, 0), Point(2, 0)];
@@ -244,6 +250,7 @@ class _GamePageState extends State<GamePage> {
   List<Point<int>> obstacles = [];
   Timer? timer;
   bool isPaused = false;
+  bool isAuto = false;
   int speed = 300; // 初始速度
   int score = 0; // 当前得分
   final FocusNode _focusNode = FocusNode();
@@ -258,6 +265,9 @@ class _GamePageState extends State<GamePage> {
 
   void initializeGame() {
     if (widget.mode == "hell") {
+      obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
+      speed = 150; // 地狱模式更快速度
+    } else if (widget.mode == "AI") {
       obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
       speed = 150; // 地狱模式更快速度
     } else {
@@ -297,6 +307,9 @@ class _GamePageState extends State<GamePage> {
             increaseSpeed();
             score += 10; // 每次吃到食物增加得分
           }
+          if (isAuto) {
+            ai();
+          }
         });
       }
     });
@@ -312,6 +325,12 @@ class _GamePageState extends State<GamePage> {
   void togglePause() {
     setState(() {
       isPaused = !isPaused;
+    });
+  }
+
+  void toggleAi() {
+    setState(() {
+      isAuto = !isAuto;
     });
   }
 
@@ -334,6 +353,11 @@ class _GamePageState extends State<GamePage> {
         newHead = Point(snake.last.x + 1, snake.last.y);
     }
     snake.add(newHead);
+    print(newHead.x.toString() +
+        " and " +
+        newHead.y.toString() +
+        " duration " +
+        direction.toString());
     snake.removeAt(0);
   }
 
@@ -360,6 +384,10 @@ class _GamePageState extends State<GamePage> {
     if (score > highScore) {
       highScore = score;
     }
+  }
+
+  void ai() {
+    direction = aStarPathfinding(rowCount, columnCount, obstacles, snake, food);
   }
 
   void showGameOverDialog() {
@@ -416,6 +444,17 @@ class _GamePageState extends State<GamePage> {
             Navigator.pop(context); // 返回菜单页面
           },
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              toggleAi();
+            },
+            child: Text(
+              "开启AI", // 替换为你的按钮文本
+              style: TextStyle(color: Colors.black), // 确保文本颜色可见
+            ),
+          ),
+        ],
       ),
       body: Focus(
         autofocus: true,
@@ -483,13 +522,12 @@ class _GamePageState extends State<GamePage> {
                       return LayoutBuilder(
                         builder: (context, constraints) {
                           return Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/food.png'),
-              fit: BoxFit.cover,
-            ),
-          )
-          );
+                              decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/food.png'),
+                              fit: BoxFit.cover,
+                            ),
+                          ));
                         },
                       );
                     } else if (obstacles.contains(point)) {
@@ -540,12 +578,12 @@ class HighScorePage extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('assets/high_back.jpg'),
-              fit: BoxFit.cover,
-            ),
+            image: AssetImage('assets/high_back.jpg'),
+            fit: BoxFit.cover,
           ),
-          child: Center(
-        child: Text(
+        ),
+        child: Center(
+          child: Text(
             "最高分：${_GamePageState.highScore}",
             style: TextStyle(
               fontSize: 36,
