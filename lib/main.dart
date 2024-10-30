@@ -488,54 +488,61 @@ class _GamePageState extends State<GamePage> {
           child: Column(
             children: [
               Expanded(
-                child: GridView.builder(
-                  itemCount: rowCount * columnCount,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: columnCount,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    int x = index % columnCount;
-                    int y = index ~/ columnCount;
-                    Point<int> point = Point(x, y);
+                child: GestureDetector(
+                  child: AspectRatio(
+                    aspectRatio: rowCount /
+                        (columnCount + 5), // Adjusts based on grid dimensions
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: rowCount * columnCount,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: columnCount,
+                      ),
+                      itemBuilder: (BuildContext context, int index) {
+                        int x = index % columnCount;
+                        int y = index ~/ columnCount;
+                        Point<int> point = Point(x, y);
 
-                    if (point == snake.last) {
-                      // Render snake head
-                      return Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/head2.webp'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    } else if (snake.contains(point)) {
-                      // Render snake body
-                      return Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/body.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    } else if (point == food) {
-                      return LayoutBuilder(
-                        builder: (context, constraints) {
+                        if (point == snake.last) {
+                          // Render snake head
                           return Container(
-                              decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/food.png'),
-                              fit: BoxFit.cover,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('assets/head2.webp'),
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ));
-                        },
-                      );
-                    } else if (obstacles.contains(point)) {
-                      return Container(color: Colors.black);
-                    } else {
-                      return Container(color: Colors.grey[200]);
-                    }
-                  },
+                          );
+                        } else if (snake.contains(point)) {
+                          // Render snake body
+                          return Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('assets/body.png'),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        } else if (point == food) {
+                          return LayoutBuilder(
+                            builder: (context, constraints) {
+                              return Container(
+                                  decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/food.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ));
+                            },
+                          );
+                        } else if (obstacles.contains(point)) {
+                          return Container(color: Colors.black);
+                        } else {
+                          return Container(color: Colors.grey[200]);
+                        }
+                      },
+                    ),
+                  ),
                 ),
               ),
               if (isPaused)
