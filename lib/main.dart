@@ -450,7 +450,7 @@ class _GamePageState extends State<GamePage> {
               toggleAi();
             },
             child: Text(
-              "开启AI", // 替换为你的按钮文本
+              isAuto ? "关闭AI" : "开启AI", // 根据isAuto的值显示不同文本
               style: TextStyle(color: Colors.black), // 确保文本颜色可见
             ),
           ),
