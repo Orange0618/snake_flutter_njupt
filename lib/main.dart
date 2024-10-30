@@ -431,12 +431,27 @@ class GamePageState extends State<GamePage> {
         actions: [
           TextButton(
             onPressed: () {
+              togglePause();
+            },
+            child: Text(
+              isPaused ? "继续" : "暂停", // 根据isAuto的值显示不同文本
+              style: TextStyle(color: Colors.black), // 确保文本颜色可见
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          TextButton(
+            onPressed: () {
               toggleAi();
             },
             child: Text(
-              isAuto ? "关闭AI" : "开启AI", // 根据isAuto的值显示不同文本
+              isAuto ? "关闭辅助" : "开启辅助", // 根据isAuto的值显示不同文本
               style: TextStyle(color: Colors.black), // 确保文本颜色可见
             ),
+          ),
+          SizedBox(
+            width: 30,
           ),
         ],
       ),
