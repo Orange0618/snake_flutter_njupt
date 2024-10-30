@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'ai.dart';
 import 'dart:ui' as ui;
 
+
 void main() {
   runApp(SnakeGame());
 }
@@ -189,18 +190,6 @@ class MenuPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => GamePage(mode: "AI"),
-                      ),
-                    );
-                  },
-                  child: Text("教学模式"),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
                       MaterialPageRoute(builder: (context) => HighScorePage()),
                     );
                   },
@@ -267,10 +256,7 @@ class _GamePageState extends State<GamePage> {
     if (widget.mode == "hell") {
       obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
       speed = 150; // 地狱模式更快速度
-    } else if (widget.mode == "AI") {
-      obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
-      speed = 150; // 地狱模式更快速度
-    } else {
+    }  else {
       obstacles = generateObstacles(5); // 普通模式障碍物数量减少为 5
       speed = 300; // 普通模式速度较慢
     }
@@ -513,7 +499,7 @@ class _GamePageState extends State<GamePage> {
                       return Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/body.png'),
+                            image: AssetImage('assets/body2.jpeg'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -524,16 +510,28 @@ class _GamePageState extends State<GamePage> {
                           return Container(
                               decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage('assets/food.png'),
+                              image: AssetImage('assets/food2.png'),
                               fit: BoxFit.cover,
                             ),
                           ));
                         },
                       );
                     } else if (obstacles.contains(point)) {
-                      return Container(color: Colors.black);
+                      return Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/obstacle.webp'),
+                          )
+                        ),
+                      );
                     } else {
-                      return Container(color: Colors.grey[200]);
+                      return Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/ground.jpg'),
+                          )
+                        ),
+                      );
                     }
                   },
                 ),
