@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -137,6 +138,7 @@ class _GamePageState extends State<GamePage> {
   List<Point<int>> obstacles = [];
   Timer? timer;
   bool isPaused = false;
+  bool isAuto = false;
   int speed = 300; // 初始速度
   int score = 0; // 当前得分
   final FocusNode _focusNode = FocusNode();
@@ -193,6 +195,9 @@ class _GamePageState extends State<GamePage> {
             increaseSpeed();
             score += 10; // 每次吃到食物增加得分
           }
+          if (isAuto) {
+            ai();
+          }
         });
       }
     });
@@ -208,6 +213,12 @@ class _GamePageState extends State<GamePage> {
   void togglePause() {
     setState(() {
       isPaused = !isPaused;
+    });
+  }
+
+  void toggleAi() {
+    setState(() {
+      isAuto = !isAuto;
     });
   }
 
@@ -230,6 +241,11 @@ class _GamePageState extends State<GamePage> {
         newHead = Point(snake.last.x + 1, snake.last.y);
     }
     snake.add(newHead);
+    print(newHead.x.toString() +
+        " and " +
+        newHead.y.toString() +
+        " duration " +
+        direction.toString());
     snake.removeAt(0);
   }
 
@@ -256,6 +272,10 @@ class _GamePageState extends State<GamePage> {
     if (score > highScore) {
       highScore = score;
     }
+  }
+
+  void ai() {
+    direction = aStarPathfinding(rowCount, columnCount, obstacles, snake, food);
   }
 
   void showGameOverDialog() {
@@ -310,6 +330,17 @@ class _GamePageState extends State<GamePage> {
             Navigator.pop(context); // 返回菜单页面
           },
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              toggleAi();
+            },
+            child: Text(
+              "开启AI", // 替换为你的按钮文本
+              style: TextStyle(color: Colors.black), // 确保文本颜色可见
+            ),
+          ),
+        ],
       ),
       body: RawKeyboardListener(
         focusNode: _focusNode,

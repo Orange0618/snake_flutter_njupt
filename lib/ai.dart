@@ -52,6 +52,7 @@ class Node {
 // 使用 PriorityQueue 处理优先队列
 int aStarPathfinding(rowCount, columnCount, List<Point<int>> obstacles,
     List<Point<int>> snake, Point<int> food) {
+  print(obstacles);
   int rows = rowCount;
   int cols = columnCount;
   List<List<bool>> closedSet =
@@ -62,17 +63,17 @@ int aStarPathfinding(rowCount, columnCount, List<Point<int>> obstacles,
 
   Node startNode = Node(snake.last.x, snake.last.y);
   Node endNode = Node(food.x, food.y);
-
+  print(startNode.x.toString() + " snake " + startNode.y.toString());
   openSet.add(startNode);
 
   List<List<int>> directions = [
-    [-1, 0], // 上
-    [1, 0], // 下
-    [0, -1], // 左
-    [0, 1], // 右
+    [0, -1], // 上
+    [0, 1], // 下
+    [-1, 0], // 左
+    [1, 0], // 右
   ];
 
-  while (openSet.isEmpty) {
+  while (!openSet.isEmpty) {
     Node current = openSet.removeFirst();
     if (current.x == endNode.x && current.y == endNode.y) {
       return reconstructPath(current);
@@ -88,8 +89,8 @@ int aStarPathfinding(rowCount, columnCount, List<Point<int>> obstacles,
           newX >= rows ||
           newY < 0 ||
           newY >= cols ||
-          obstacles.contains([newX, newY]) ||
-          snake.contains([newX, newY]) ||
+          obstacles.contains(Point(newX, newY)) ||
+          snake.contains(Point(newX, newY)) ||
           closedSet[newX][newY]) {
         continue;
       }
@@ -106,7 +107,7 @@ int aStarPathfinding(rowCount, columnCount, List<Point<int>> obstacles,
     }
   }
 
-  return null; // 没有路径
+  return 1; // 没有路径
 }
 
 int reconstructPath(Node current) {
@@ -116,17 +117,33 @@ int reconstructPath(Node current) {
     int dy = current.y - current.parent!.y;
 
     if (dx == -1 && dy == 0) {
-      path.add(0); // 上
+      path.add(3); //  left
     } else if (dx == 1 && dy == 0) {
-      path.add(1); // 下
+      path.add(1); // right
     } else if (dx == 0 && dy == -1) {
-      path.add(2); // 左
+      path.add(0); // up
     } else if (dx == 0 && dy == 1) {
-      path.add(3); // 右
+      path.add(2); // down
     }
 
     current = current.parent!;
   }
   path = path.reversed.toList();
+  print(path);
   return path.first;
 }
+
+// void main() {
+//   Stopwatch stopwatch = Stopwatch();
+//   // 开始计时
+//   stopwatch.start();
+//   // 调用待测试的函数
+//   int result = aStarPathfinding(10, 10, [Point(6, 2), Point(2, 1), Point(5, 3)],
+//       [Point(5, 0), Point(5, 1), Point(5, 2)], Point(8, 8));
+//   // 停止计时
+//   stopwatch.stop();
+
+//   // 输出结果和执行时间
+//   print('Result: $result');
+//   print('Execution time: ${stopwatch.elapsedMilliseconds} ms');
+// }
