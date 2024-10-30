@@ -231,9 +231,12 @@ class GamePageState extends State<GamePage> {
 
   List<Point<int>> snake = [Point(0, 0), Point(1, 0), Point(2, 0)];
   int direction = 1; // 0:上, 1:右, 2:下, 3:左
-  Point<int> food =Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
-  Point<int>? specialFood1 = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
-  Point<int>? specialFood2 = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+  Point<int> food =
+      Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+  Point<int>? specialFood1 =
+      Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+  Point<int>? specialFood2 =
+      Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
   Timer? specialFoodTimer; // 特殊食物计时器
   List<Point<int>> obstacles = [];
   Timer? timer;
@@ -257,12 +260,13 @@ class GamePageState extends State<GamePage> {
     specialFoodTimer?.cancel();
     specialFoodTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
       setState(() {
-        specialFood1 = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
-        specialFood2 = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+        specialFood1 =
+            Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+        specialFood2 =
+            Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
       });
     });
   }
-  
 
   void initializeGame() {
     if (widget.mode == "hell") {
@@ -324,7 +328,6 @@ class GamePageState extends State<GamePage> {
       specialFood2 = null;
     }
   }
-  
 
   // 随机触发效果
   void triggerRandomEffect() {
@@ -421,7 +424,10 @@ class GamePageState extends State<GamePage> {
 
   bool checkCollision() {
     Point<int> head = snake.last;
-    if (head.x < 0 || head.x >= columnCount || head.y < 0 || head.y >= rowCount) {
+    if (head.x < 0 ||
+        head.x >= columnCount ||
+        head.y < 0 ||
+        head.y >= rowCount) {
       return true;
     }
     if (snake.sublist(0, snake.length - 1).contains(head)) return true;
@@ -579,7 +585,7 @@ class GamePageState extends State<GamePage> {
                           int x = index % columnCount;
                           int y = index ~/ columnCount;
                           Point<int> point = Point(x, y);
-        
+
                           if (point == snake.last) {
                             // Render snake head
                             return Container(
@@ -612,6 +618,9 @@ class GamePageState extends State<GamePage> {
                                 ));
                               },
                             );
+                          } else if (point == specialFood1 ||
+                              point == specialFood2) {
+                            return buildSpecialFood(point); // 渲染特殊食物
                           } else if (obstacles.contains(point)) {
                             return Container(
                               decoration: BoxDecoration(
@@ -628,40 +637,8 @@ class GamePageState extends State<GamePage> {
                             );
                           }
                         },
-<<<<<<< HEAD
-                      );
-                    }
-                    else if (point == specialFood1 || point == specialFood2) {
-                    return buildSpecialFood(point); // 渲染特殊食物
-                  }
-                    else if (obstacles.contains(point)) {
-                      return Container(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                          image: AssetImage('assets/obstacle.webp'),
-                        )),
-                      );
-                    } else {
-                      return Container(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                          image: AssetImage('assets/ground.jpg'),
-                        )),
-                      );
-                    }
-                  },
-                ),
-              ),
-              if (isPaused)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "游戏已暂停 (按空格继续)",
-                    style: TextStyle(fontSize: 18, color: Colors.red),
-=======
                       ),
                     ),
->>>>>>> main
                   ),
                 ),
                 if (isPaused)
