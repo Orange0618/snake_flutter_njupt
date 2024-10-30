@@ -441,107 +441,116 @@ class _GamePageState extends State<GamePage> {
           ),
         ],
       ),
-      body: Focus(
-        autofocus: true,
-        onKey: (FocusNode node, RawKeyEvent event) {
-          // Intercept the arrow keys and prevent focus change
-          if (event is RawKeyDownEvent) {
-            if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
-                direction != 2) {
-              direction = 0;
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowRight &&
-                direction != 3) {
-              direction = 1;
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
-                direction != 0) {
-              direction = 2;
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft &&
-                direction != 1) {
-              direction = 3;
-            } else if (event.logicalKey == LogicalKeyboardKey.space) {
-              togglePause();
-            }
-            return KeyEventResult.handled; // Mark the event as handled
-          }
-          return KeyEventResult.ignored; // Ignore other events
-        },
-        child: RawKeyboardListener(
-          focusNode: _focusNode,
+      body: Center(
+        child: Focus(
           autofocus: true,
-          onKey: (RawKeyEvent
-              event) {}, // Keep empty, as `Focus` now handles events
-          child: Column(
-            children: [
-              Expanded(
-                child: GridView.builder(
-                  itemCount: rowCount * columnCount,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: columnCount,
-                  ),
-                  itemBuilder: (BuildContext context, int index) {
-                    int x = index % columnCount;
-                    int y = index ~/ columnCount;
-                    Point<int> point = Point(x, y);
-
-                    if (point == snake.last) {
-                      // Render snake head
-                      return Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/head2.webp'),
-                            fit: BoxFit.cover,
-                          ),
+          onKey: (FocusNode node, RawKeyEvent event) {
+            // Intercept the arrow keys and prevent focus change
+            if (event is RawKeyDownEvent) {
+              if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
+                  direction != 2) {
+                direction = 0;
+              } else if (event.logicalKey == LogicalKeyboardKey.arrowRight &&
+                  direction != 3) {
+                direction = 1;
+              } else if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
+                  direction != 0) {
+                direction = 2;
+              } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft &&
+                  direction != 1) {
+                direction = 3;
+              } else if (event.logicalKey == LogicalKeyboardKey.space) {
+                togglePause();
+              }
+              return KeyEventResult.handled; // Mark the event as handled
+            }
+            return KeyEventResult.ignored; // Ignore other events
+          },
+          child: RawKeyboardListener(
+            focusNode: _focusNode,
+            autofocus: true,
+            onKey: (RawKeyEvent
+                event) {}, // Keep empty, as `Focus` now handles events
+            child: Column(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    child: AspectRatio(
+                      aspectRatio: rowCount /
+                          (columnCount + 5), // Adjusts based on grid dimensions
+                      child: GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: rowCount * columnCount,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: columnCount,
                         ),
-                      );
-                    } else if (snake.contains(point)) {
-                      // Render snake body
-                      return Container(
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/body2.jpeg'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    } else if (point == food) {
-                      return LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Container(
+                        itemBuilder: (BuildContext context, int index) {
+                          int x = index % columnCount;
+                          int y = index ~/ columnCount;
+                          Point<int> point = Point(x, y);
+        
+                          if (point == snake.last) {
+                            // Render snake head
+                            return Container(
                               decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/food2.png'),
-                              fit: BoxFit.cover,
-                            ),
-                          ));
+                                image: DecorationImage(
+                                  image: AssetImage('assets/head2.webp'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          } else if (snake.contains(point)) {
+                            // Render snake body
+                            return Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/body2.jpeg'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          } else if (point == food) {
+                            return LayoutBuilder(
+                              builder: (context, constraints) {
+                                return Container(
+                                    decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/food2.png'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ));
+                              },
+                            );
+                          } else if (obstacles.contains(point)) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                image: AssetImage('assets/obstacle.webp'),
+                              )),
+                            );
+                          } else {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                image: AssetImage('assets/ground.jpg'),
+                              )),
+                            );
+                          }
                         },
-                      );
-                    } else if (obstacles.contains(point)) {
-                      return Container(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                          image: AssetImage('assets/obstacle.webp'),
-                        )),
-                      );
-                    } else {
-                      return Container(
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                          image: AssetImage('assets/ground.jpg'),
-                        )),
-                      );
-                    }
-                  },
-                ),
-              ),
-              if (isPaused)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "游戏已暂停 (按空格继续)",
-                    style: TextStyle(fontSize: 18, color: Colors.red),
+                      ),
+                    ),
                   ),
                 ),
-            ],
+                if (isPaused)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "游戏已暂停 (按空格继续)",
+                      style: TextStyle(fontSize: 18, color: Colors.red),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
