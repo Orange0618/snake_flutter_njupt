@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'ai.dart';
+import 'dart:ui' as ui;
 
 void main() {
   runApp(SnakeGame());
@@ -13,6 +14,7 @@ class SnakeGame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: '贪吃蛇游戏',
       title: '贪吃蛇游戏',
       theme: ThemeData(primarySwatch: Colors.green),
       home: MainPage(), // 主页面入口
@@ -25,23 +27,79 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MenuPage()),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-            backgroundColor: Colors.green,
-          ),
-          child: Text(
-            "开始游戏",
-            style: TextStyle(fontSize: 24, color: Colors.white),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/mainpage_back2.jpg'), // 设置背景图片
+            fit: BoxFit.cover, // 图片填充整个页面
           ),
         ),
+        child: Center(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFF8F1FFF), Color(0xFFFF00FF)],
+                  ).createShader(Offset.zero & bounds.size);
+                },
+                child: Text(
+                  '贪吃蛇游戏',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 6
+                        ..color = Colors.white),
+                ),
+              ),
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.white, Color(0xFFFFBDE9)],
+                  ).createShader(Offset.zero & bounds.size);
+                },
+                child: Text(
+                  '贪吃蛇游戏',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 50),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MenuPage()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+              backgroundColor: Colors.greenAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              shadowColor: Colors.black.withOpacity(0.3),
+              elevation: 10,
+            ),
+            child: Text(
+              "开始游戏",
+              style: TextStyle(fontSize: 24, color: Colors.white),
+            ),
+          ),
+        ])),
       ),
     );
   }
@@ -52,68 +110,123 @@ class MenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("菜单"),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // 返回主页面
-          },
+        appBar: AppBar(
+          title: Text("菜单"),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context); // 返回主页面
+            },
+          ),
         ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GamePage(mode: "normal"),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/menu_back2.webp'), // 设置背景图片
+              fit: BoxFit.cover, // 图片填充整个页面
+            ),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GamePage(mode: "normal"),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    backgroundColor: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadowColor: Colors.black.withOpacity(0.3),
+                    elevation: 8,
                   ),
-                );
-              },
-              child: Text("普通模式"),
-            ),
-            SizedBox(height: 20), // 按钮之间的间隔
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GamePage(mode: "hell"),
+                  child: Text(
+                    "普通模式",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                );
-              },
-              child: Text("地狱模式"),
-            ),
-            SizedBox(height: 20), // 按钮之间的间隔
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GamePage(mode: "AI"),
+                ),
+                SizedBox(height: 20), // 按钮之间的间隔
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GamePage(mode: "hell"),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    backgroundColor: Colors.redAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadowColor: Colors.black.withOpacity(0.3),
+                    elevation: 8,
                   ),
-                );
-              },
-              child: Text("教学模式"),
+                  child: Text(
+                    "地狱模式",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20), // 按钮之间的间隔
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GamePage(mode: "AI"),
+                      ),
+                    );
+                  },
+                  child: Text("教学模式"),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HighScorePage()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    backgroundColor: Colors.greenAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadowColor: Colors.black.withOpacity(0.3),
+                    elevation: 8,
+                  ),
+                  child: Text(
+                    "最高分",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HighScorePage()),
-                );
-              },
-              child: Text("最高分"),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }
 
@@ -300,6 +413,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   void onKeyPress(RawKeyEvent event) {
+    // ignore: deprecated_member_use
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.arrowUp && direction != 2) {
         direction = 0;
@@ -315,6 +429,7 @@ class _GamePageState extends State<GamePage> {
       } else if (event.logicalKey == LogicalKeyboardKey.space) {
         togglePause();
       }
+      return;
     }
   }
 
@@ -342,62 +457,98 @@ class _GamePageState extends State<GamePage> {
           ),
         ],
       ),
-      body: RawKeyboardListener(
-        focusNode: _focusNode,
+      body: Focus(
         autofocus: true,
-        onKey: onKeyPress,
-        child: Column(
-          children: [
-            Expanded(
-              child: GridView.builder(
-                itemCount: rowCount * columnCount,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columnCount,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  int x = index % columnCount;
-                  int y = index ~/ columnCount;
-                  Point<int> point = Point(x, y);
+        onKey: (FocusNode node, RawKeyEvent event) {
+          // Intercept the arrow keys and prevent focus change
+          if (event is RawKeyDownEvent) {
+            if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
+                direction != 2) {
+              direction = 0;
+            } else if (event.logicalKey == LogicalKeyboardKey.arrowRight &&
+                direction != 3) {
+              direction = 1;
+            } else if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
+                direction != 0) {
+              direction = 2;
+            } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft &&
+                direction != 1) {
+              direction = 3;
+            } else if (event.logicalKey == LogicalKeyboardKey.space) {
+              togglePause();
+            }
+            return KeyEventResult.handled; // Mark the event as handled
+          }
+          return KeyEventResult.ignored; // Ignore other events
+        },
+        child: RawKeyboardListener(
+          focusNode: _focusNode,
+          autofocus: true,
+          onKey: (RawKeyEvent
+              event) {}, // Keep empty, as `Focus` now handles events
+          child: Column(
+            children: [
+              Expanded(
+                child: GridView.builder(
+                  itemCount: rowCount * columnCount,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columnCount,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    int x = index % columnCount;
+                    int y = index ~/ columnCount;
+                    Point<int> point = Point(x, y);
 
-                  if (point == snake.last) {
-                    // 渲染蛇头
-                    return Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/head.jpeg'),
-                          fit: BoxFit.cover,
+                    if (point == snake.last) {
+                      // Render snake head
+                      return Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/head2.webp'),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    );
-                  } else if (snake.contains(point)) {
-                    // 渲染蛇身体
-                    return Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/body.png'),
-                          fit: BoxFit.cover,
+                      );
+                    } else if (snake.contains(point)) {
+                      // Render snake body
+                      return Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/body.png'),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    );
-                  } else if (point == food) {
-                    return Container(color: Colors.red);
-                  } else if (obstacles.contains(point)) {
-                    return Container(color: Colors.black);
-                  } else {
-                    return Container(color: Colors.grey[200]);
-                  }
-                },
-              ),
-            ),
-            if (isPaused)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "游戏已暂停 (按空格继续)",
-                  style: TextStyle(fontSize: 18, color: Colors.red),
+                      );
+                    } else if (point == food) {
+                      return LayoutBuilder(
+                        builder: (context, constraints) {
+                          return Container(
+                              decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/food.png'),
+                              fit: BoxFit.cover,
+                            ),
+                          ));
+                        },
+                      );
+                    } else if (obstacles.contains(point)) {
+                      return Container(color: Colors.black);
+                    } else {
+                      return Container(color: Colors.grey[200]);
+                    }
+                  },
                 ),
               ),
-          ],
+              if (isPaused)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "游戏已暂停 (按空格继续)",
+                    style: TextStyle(fontSize: 18, color: Colors.red),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -425,10 +576,29 @@ class HighScorePage extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
-        child: Text(
-          "最高分：${_GamePageState.highScore}",
-          style: TextStyle(fontSize: 24),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/high_back.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            "最高分：${_GamePageState.highScore}",
+            style: TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+              color: Colors.yellowAccent,
+              shadows: [
+                Shadow(
+                  offset: Offset(3, 3),
+                  color: Colors.black54,
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
