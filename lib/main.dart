@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:ui' as ui; 
+
+
 
 void main() {
   runApp(SnakeGame());
@@ -27,12 +30,56 @@ class MainPage extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/mainpage_back.jpg'), // 设置背景图片
+            image: AssetImage('assets/mainpage_back2.jpg'), // 设置背景图片
             fit: BoxFit.cover, // 图片填充整个页面
           ),
         ),
         child: Center(
-          child: ElevatedButton(
+          child:Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children:[
+                Stack(
+            alignment: Alignment.center,
+            children: [
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFF8F1FFF), Color(0xFFFF00FF)],
+                  ).createShader(Offset.zero & bounds.size);
+                },
+                child: Text(
+                  '贪吃蛇游戏',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 6
+                        ..color = Colors.white),
+                ),
+              ),
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.white, Color(0xFFFFBDE9)],
+                  ).createShader(Offset.zero & bounds.size);
+                },
+                child: Text(
+                  '贪吃蛇游戏',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
+              SizedBox(height: 50),
+              ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
@@ -40,14 +87,21 @@ class MainPage extends StatelessWidget {
               );
             },
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              backgroundColor: Colors.green,
+              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+              backgroundColor: Colors.greenAccent,
+              shape:RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              shadowColor: Colors.black.withOpacity(0.3),
+              elevation: 10,
             ),
             child: Text(
               "开始游戏",
               style: TextStyle(fontSize: 24, color: Colors.white),
             ),
           ),
+            ]
+          )
         ),
       ),
     );
@@ -68,8 +122,15 @@ class MenuPage extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
-        child: Column(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/menu_back2.webp'), // 设置背景图片
+            fit: BoxFit.cover, // 图片填充整个页面
+          ),
+        ),
+        child: Center(
+          child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
@@ -81,7 +142,23 @@ class MenuPage extends StatelessWidget {
                   ),
                 );
               },
-              child: Text("普通模式"),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                backgroundColor: Colors.blueAccent,
+                shape:RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                shadowColor: Colors.black.withOpacity(0.3),
+                elevation: 8,
+              ),
+              child: Text(
+                "普通模式",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color:Colors.white,
+                ),
+              ),
             ),
             SizedBox(height: 20), // 按钮之间的间隔
             ElevatedButton(
@@ -93,7 +170,23 @@ class MenuPage extends StatelessWidget {
                   ),
                 );
               },
-              child: Text("地狱模式"),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  backgroundColor: Colors.redAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  shadowColor: Colors.black.withOpacity(0.3),
+                  elevation: 8,
+                ),
+              child: Text(
+                "地狱模式",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
             ),
             SizedBox(height: 20), // 按钮之间的间隔
             ElevatedButton(
@@ -103,11 +196,29 @@ class MenuPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => HighScorePage()),
                 );
               },
-              child: Text("最高分"),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                backgroundColor: Colors.greenAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                shadowColor: Colors.black.withOpacity(0.3),
+                elevation: 8,
+              ),
+              child: Text(
+                "最高分",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ],
         ),
       ),
+      )
+      
     );
   }
 }
@@ -353,7 +464,7 @@ class _GamePageState extends State<GamePage> {
                       return Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage('assets/head.jpeg'),
+                            image: AssetImage('assets/head2.webp'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -426,10 +537,29 @@ class HighScorePage extends StatelessWidget {
           },
         ),
       ),
-      body: Center(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/high_back.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Center(
         child: Text(
-          "最高分：${_GamePageState.highScore}",
-          style: TextStyle(fontSize: 24),
+            "最高分：${_GamePageState.highScore}",
+            style: TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+              color: Colors.yellowAccent,
+              shadows: [
+                Shadow(
+                  offset: Offset(3, 3),
+                  color: Colors.black54,
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
