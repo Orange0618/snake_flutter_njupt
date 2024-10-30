@@ -189,18 +189,6 @@ class MenuPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => GamePage(mode: "AI"),
-                      ),
-                    );
-                  },
-                  child: Text("教学模式"),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
                       MaterialPageRoute(builder: (context) => HighScorePage()),
                     );
                   },
@@ -265,9 +253,6 @@ class _GamePageState extends State<GamePage> {
 
   void initializeGame() {
     if (widget.mode == "hell") {
-      obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
-      speed = 150; // 地狱模式更快速度
-    } else if (widget.mode == "AI") {
       obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
       speed = 150; // 地狱模式更快速度
     } else {
@@ -450,110 +435,122 @@ class _GamePageState extends State<GamePage> {
               toggleAi();
             },
             child: Text(
-              "开启AI", // 替换为你的按钮文本
+              isAuto ? "关闭AI" : "开启AI", // 根据isAuto的值显示不同文本
               style: TextStyle(color: Colors.black), // 确保文本颜色可见
             ),
           ),
         ],
       ),
-      body: Focus(
-        autofocus: true,
-        onKey: (FocusNode node, RawKeyEvent event) {
-          // Intercept the arrow keys and prevent focus change
-          if (event is RawKeyDownEvent) {
-            if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
-                direction != 2) {
-              direction = 0;
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowRight &&
-                direction != 3) {
-              direction = 1;
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
-                direction != 0) {
-              direction = 2;
-            } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft &&
-                direction != 1) {
-              direction = 3;
-            } else if (event.logicalKey == LogicalKeyboardKey.space) {
-              togglePause();
-            }
-            return KeyEventResult.handled; // Mark the event as handled
-          }
-          return KeyEventResult.ignored; // Ignore other events
-        },
-        child: RawKeyboardListener(
-          focusNode: _focusNode,
+      body: Center(
+        child: Focus(
           autofocus: true,
-          onKey: (RawKeyEvent
-              event) {}, // Keep empty, as `Focus` now handles events
-          child: Column(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  child: AspectRatio(
-                    aspectRatio: rowCount /
-                        (columnCount + 5), // Adjusts based on grid dimensions
-                    child: GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: rowCount * columnCount,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: columnCount,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        int x = index % columnCount;
-                        int y = index ~/ columnCount;
-                        Point<int> point = Point(x, y);
-
-                        if (point == snake.last) {
-                          // Render snake head
-                          return Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/head2.webp'),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        } else if (snake.contains(point)) {
-                          // Render snake body
-                          return Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage('assets/body.png'),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        } else if (point == food) {
-                          return LayoutBuilder(
-                            builder: (context, constraints) {
-                              return Container(
-                                  decoration: BoxDecoration(
+          onKey: (FocusNode node, RawKeyEvent event) {
+            // Intercept the arrow keys and prevent focus change
+            if (event is RawKeyDownEvent) {
+              if (event.logicalKey == LogicalKeyboardKey.arrowUp &&
+                  direction != 2) {
+                direction = 0;
+              } else if (event.logicalKey == LogicalKeyboardKey.arrowRight &&
+                  direction != 3) {
+                direction = 1;
+              } else if (event.logicalKey == LogicalKeyboardKey.arrowDown &&
+                  direction != 0) {
+                direction = 2;
+              } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft &&
+                  direction != 1) {
+                direction = 3;
+              } else if (event.logicalKey == LogicalKeyboardKey.space) {
+                togglePause();
+              }
+              return KeyEventResult.handled; // Mark the event as handled
+            }
+            return KeyEventResult.ignored; // Ignore other events
+          },
+          child: RawKeyboardListener(
+            focusNode: _focusNode,
+            autofocus: true,
+            onKey: (RawKeyEvent
+                event) {}, // Keep empty, as `Focus` now handles events
+            child: Column(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    child: AspectRatio(
+                      aspectRatio: rowCount /
+                          (columnCount + 5), // Adjusts based on grid dimensions
+                      child: GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: rowCount * columnCount,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: columnCount,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          int x = index % columnCount;
+                          int y = index ~/ columnCount;
+                          Point<int> point = Point(x, y);
+        
+                          if (point == snake.last) {
+                            // Render snake head
+                            return Container(
+                              decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: AssetImage('assets/food.png'),
+                                  image: AssetImage('assets/head2.webp'),
                                   fit: BoxFit.cover,
                                 ),
-                              ));
-                            },
-                          );
-                        } else if (obstacles.contains(point)) {
-                          return Container(color: Colors.black);
-                        } else {
-                          return Container(color: Colors.grey[200]);
-                        }
-                      },
+                              ),
+                            );
+                          } else if (snake.contains(point)) {
+                            // Render snake body
+                            return Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/body2.jpeg'),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          } else if (point == food) {
+                            return LayoutBuilder(
+                              builder: (context, constraints) {
+                                return Container(
+                                    decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/food2.png'),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ));
+                              },
+                            );
+                          } else if (obstacles.contains(point)) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                image: AssetImage('assets/obstacle.webp'),
+                              )),
+                            );
+                          } else {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                image: AssetImage('assets/ground.jpg'),
+                              )),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (isPaused)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "游戏已暂停 (按空格继续)",
-                    style: TextStyle(fontSize: 18, color: Colors.red),
+                if (isPaused)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "游戏已暂停 (按空格继续)",
+                      style: TextStyle(fontSize: 18, color: Colors.red),
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
