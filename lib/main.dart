@@ -233,8 +233,10 @@ class _GamePageState extends State<GamePage> {
 
   List<Point<int>> snake = [Point(0, 0), Point(1, 0), Point(2, 0)];
   int direction = 1; // 0:上, 1:右, 2:下, 3:左
-  Point<int> food =
-      Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+  Point<int> food =Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+  Point<int>? specialFood1 = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+  Point<int>? specialFood2 = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+  Timer? specialFoodTimer; // 特殊食物计时器
   List<Point<int>> obstacles = [];
   Timer? timer;
   bool isPaused = false;
@@ -248,8 +250,21 @@ class _GamePageState extends State<GamePage> {
     super.initState();
     initializeGame();
     startGame();
+    generateSpecialFood(); // 生成特殊食物
     _focusNode.requestFocus();
   }
+
+  // 每10秒刷新两个特殊食物
+  void generateSpecialFood() {
+    specialFoodTimer?.cancel();
+    specialFoodTimer = Timer.periodic(Duration(seconds: 10), (Timer timer) {
+      setState(() {
+        specialFood1 = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+        specialFood2 = Point(Random().nextInt(columnCount), Random().nextInt(rowCount));
+      });
+    });
+  }
+  
 
   void initializeGame() {
     if (widget.mode == "hell") {
@@ -292,6 +307,7 @@ class _GamePageState extends State<GamePage> {
             increaseSpeed();
             score += 10; // 每次吃到食物增加得分
           }
+          checkSpecialFoodEffects();
           if (isAuto) {
             ai();
           }
@@ -300,8 +316,57 @@ class _GamePageState extends State<GamePage> {
     });
   }
 
+  // 检查特殊食物效果
+  void checkSpecialFoodEffects() {
+    Point<int> head = snake.last;
+
+    if (head == specialFood1 || head == specialFood2) {
+      triggerRandomEffect();
+      specialFood1 = null;
+      specialFood2 = null;
+    }
+  }
+  
+
+  // 随机触发效果
+  void triggerRandomEffect() {
+    int effect = Random().nextInt(3); // 随机生成0-2的数
+
+    switch (effect) {
+      case 0: // 加速效果
+        setState(() {
+          speed = speed - 100;
+          startGame();
+        });
+        Timer(Duration(seconds: 5), () {
+          setState(() {
+            speed = speed + 100; // 5秒后恢复原速
+            startGame();
+          });
+        });
+        break;
+      case 1: // 减速效果
+        setState(() {
+          speed = speed + 100;
+          startGame();
+        });
+        Timer(Duration(seconds: 5), () {
+          setState(() {
+            speed = speed - 100; // 5秒后恢复原速
+            startGame();
+          });
+        });
+        break;
+      case 2: // 缩短效果
+        if (snake.length > 3) {
+          snake.removeAt(0); // 移除蛇尾
+        }
+        break;
+    }
+  }
+
   void increaseSpeed() {
-    if (speed > 100) {
+    if (speed > 50) {
       speed -= 20;
     }
     startGame();
@@ -369,6 +434,18 @@ class _GamePageState extends State<GamePage> {
     if (score > highScore) {
       highScore = score;
     }
+  }
+
+  // 渲染特殊食物
+  Widget buildSpecialFood(Point<int>? point) {
+    return point == null
+        ? Container()
+        : Container(
+            decoration: BoxDecoration(
+              color: Colors.orange, // 特殊食物颜色
+              shape: BoxShape.circle,
+            ),
+          );
   }
 
   void ai() {
@@ -515,7 +592,11 @@ class _GamePageState extends State<GamePage> {
                           ));
                         },
                       );
-                    } else if (obstacles.contains(point)) {
+                    }
+                    else if (point == specialFood1 || point == specialFood2) {
+                    return buildSpecialFood(point); // 渲染特殊食物
+                  }
+                    else if (obstacles.contains(point)) {
                       return Container(
                         decoration: BoxDecoration(
                             image: DecorationImage(
