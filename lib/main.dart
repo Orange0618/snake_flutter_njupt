@@ -187,12 +187,41 @@ class MenuPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => HighScorePage()),
+                      MaterialPageRoute(
+                          builder: (context) => GamePage(mode: "limit")),
                     );
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     backgroundColor: Colors.greenAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadowColor: Colors.black.withOpacity(0.3),
+                    elevation: 8,
+                  ),
+                  child: Text(
+                    "限时模式",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20), // 按钮之间的间隔
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HighScorePage(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    backgroundColor: Colors.purple,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -217,7 +246,7 @@ class MenuPage extends StatelessWidget {
 
 // 游戏页面，支持“普通模式”和“地狱模式”
 class GamePage extends StatefulWidget {
-  final String mode; // 模式类型："normal" 或 "hell"
+  final String mode; // 模式类型："normal" 、 "hell" 或 "limit"
   GamePage({required this.mode});
 
   @override
@@ -243,6 +272,7 @@ class GamePageState extends State<GamePage> {
   bool isPaused = false;
   bool isAuto = false;
   int speed = 300; // 初始速度
+  int time = -1; // 初始限时
   int score = 0; // 当前得分
   final FocusNode _focusNode = FocusNode();
 
@@ -272,9 +302,13 @@ class GamePageState extends State<GamePage> {
     if (widget.mode == "hell") {
       obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
       speed = 150; // 地狱模式更快速度
-    } else {
+    } else if (widget.mode == "normal") {
       obstacles = generateObstacles(5); // 普通模式障碍物数量减少为 5
       speed = 300; // 普通模式速度较慢
+    } else {
+      obstacles = generateObstacles(5);
+      speed = 300;
+      time = 60;
     }
   }
 
@@ -316,6 +350,22 @@ class GamePageState extends State<GamePage> {
         });
       }
     });
+
+    // 倒计时模式
+    if (widget.mode == "limit" && time > 0) {
+      Timer.periodic(Duration(seconds: 1), (Timer countdownTimer) {
+        if (time <= 0) {
+          countdownTimer.cancel();
+          timer?.cancel(); // 结束游戏
+          updateHighScore();
+          showGameOverDialog();
+        } else {
+          setState(() {
+            time--;
+          });
+        }
+      });
+    }
   }
 
   // 检查特殊食物效果
@@ -503,7 +553,7 @@ class GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("贪吃蛇游戏 - 分数: $score"),
+        title: Text("贪吃蛇游戏 - 分数: $score - 剩余时间：${time == -1 ? "∞" : "$time"}"),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
