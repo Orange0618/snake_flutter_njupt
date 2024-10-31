@@ -447,8 +447,10 @@ class GamePageState extends State<GamePage> {
         ? Container()
         : Container(
             decoration: BoxDecoration(
-              color: Colors.orange, // 特殊食物颜色
-              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage("assets/specialfood.png"),
+                fit: BoxFit.cover,
+              )
             ),
           );
   }
@@ -661,6 +663,7 @@ class GamePageState extends State<GamePage> {
   void dispose() {
     timer?.cancel();
     _focusNode.dispose();
+    specialFoodTimer?.cancel();
     super.dispose();
   }
 }
