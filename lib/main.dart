@@ -269,6 +269,7 @@ class GamePageState extends State<GamePage> {
   Timer? specialFoodTimer; // 特殊食物计时器
   List<Point<int>> obstacles = [];
   Timer? timer;
+  Timer? timeLimitTimer;
   bool isPaused = false;
   bool isAuto = false;
   int speed = 300; // 初始速度
@@ -353,7 +354,8 @@ class GamePageState extends State<GamePage> {
 
     // 倒计时模式
     if (widget.mode == "limit" && time > 0) {
-      Timer.periodic(Duration(seconds: 1), (Timer countdownTimer) {
+      timeLimitTimer?.cancel();
+      timeLimitTimer = Timer.periodic(Duration(seconds: 1), (Timer countdownTimer) {
         if (time <= 0) {
           countdownTimer.cancel();
           timer?.cancel(); // 结束游戏
@@ -497,8 +499,10 @@ class GamePageState extends State<GamePage> {
         ? Container()
         : Container(
             decoration: BoxDecoration(
-              color: Colors.orange, // 特殊食物颜色
-              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage("assets/specialfood.png"),
+                fit: BoxFit.cover,
+              )
             ),
           );
   }
@@ -711,6 +715,8 @@ class GamePageState extends State<GamePage> {
   void dispose() {
     timer?.cancel();
     _focusNode.dispose();
+    specialFoodTimer?.cancel();
+    timeLimitTimer?.cancel();
     super.dispose();
   }
 }
