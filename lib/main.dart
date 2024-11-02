@@ -355,7 +355,8 @@ class GamePageState extends State<GamePage> {
     // 倒计时模式
     if (widget.mode == "limit" && time > 0) {
       timeLimitTimer?.cancel();
-      timeLimitTimer = Timer.periodic(Duration(seconds: 1), (Timer countdownTimer) {
+      timeLimitTimer =
+          Timer.periodic(Duration(seconds: 1), (Timer countdownTimer) {
         if (time <= 0) {
           countdownTimer.cancel();
           timer?.cancel(); // 结束游戏
@@ -499,11 +500,10 @@ class GamePageState extends State<GamePage> {
         ? Container()
         : Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/specialfood.png"),
-                fit: BoxFit.cover,
-              )
-            ),
+                image: DecorationImage(
+              image: AssetImage("assets/specialfood.png"),
+              fit: BoxFit.cover,
+            )),
           );
   }
 
@@ -626,9 +626,22 @@ class GamePageState extends State<GamePage> {
               children: [
                 Expanded(
                   child: GestureDetector(
+                    onVerticalDragUpdate: (details) {
+                      if (direction != 0 && details.delta.dy > 0) {
+                        direction = 2;
+                      } else if (direction != 2 && details.delta.dy < 0) {
+                        direction = 0;
+                      }
+                    },
+                    onHorizontalDragUpdate: (details) {
+                      if (direction != 3 && details.delta.dx > 0) {
+                        direction = 1;
+                      } else if (direction != 1 && details.delta.dx < 0) {
+                        direction = 3;
+                      }
+                    },
                     child: AspectRatio(
-                      aspectRatio: rowCount /
-                          (columnCount + 5), // Adjusts based on grid dimensions
+                      aspectRatio: columnCount / rowCount,
                       child: GridView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: rowCount * columnCount,
