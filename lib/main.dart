@@ -110,12 +110,12 @@ class MenuPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             "菜单",
-            style: TextStyle( 
-      color: Colors.grey[800], 
-      fontWeight: FontWeight.w900, 
-      fontStyle: FontStyle.italic, 
-      fontFamily: 'Open Sans', 
-      fontSize: 40), 
+            style: TextStyle(
+                color: Colors.grey[800],
+                fontWeight: FontWeight.w900,
+                fontStyle: FontStyle.italic,
+                fontFamily: 'Open Sans',
+                fontSize: 40),
           ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -541,6 +541,7 @@ class GamePageState extends State<GamePage> {
             TextButton(
               child: Text("返回菜单"),
               onPressed: () {
+                Navigator.of(context).pop();
                 Navigator.of(context).pop(); // 返回菜单页面
               },
             ),
