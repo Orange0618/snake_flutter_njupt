@@ -392,9 +392,11 @@ class GamePageState extends State<GamePage> {
   void checkSpecialFoodEffects() {
     Point<int> head = snake.last;
 
-    if (head == specialFood1 || head == specialFood2) {
+    if (head == specialFood1) {
       triggerRandomEffect();
       specialFood1 = null;
+    }
+    if (head == specialFood2) {
       specialFood2 = null;
     }
   }
@@ -539,7 +541,6 @@ class GamePageState extends State<GamePage> {
             TextButton(
               child: Text("返回菜单"),
               onPressed: () {
-                Navigator.of(context).pop();
                 Navigator.of(context).pop(); // 返回菜单页面
               },
             ),
