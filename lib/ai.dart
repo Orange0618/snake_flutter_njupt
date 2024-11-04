@@ -61,7 +61,7 @@ int aStarPathfinding(rowCount, columnCount, List<Point<int>> obstacles,
 
   Node startNode = Node(snake.last.x, snake.last.y);
   Node endNode = Node(food.x, food.y);
-  print(startNode.x.toString() + " snake " + startNode.y.toString());
+  print("${startNode.x} snake ${startNode.y}");
   openSet.add(startNode);
 
   List<List<int>> directions = [
