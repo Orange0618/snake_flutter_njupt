@@ -13,7 +13,11 @@ class SnakeGame extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '贪吃蛇游戏',
-      theme: ThemeData(primarySwatch: Colors.green),
+      theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+          appBarTheme: AppBarTheme(
+              elevation: 4.0,
+              shadowColor: Theme.of(context).colorScheme.shadow)),
       home: MainPage(), // 主页面入口
     );
   }
@@ -23,6 +27,7 @@ class SnakeGame extends StatelessWidget {
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -84,16 +89,12 @@ class MainPage extends StatelessWidget {
             },
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-              backgroundColor: Colors.greenAccent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              shadowColor: Colors.black.withOpacity(0.3),
-              elevation: 10,
+              backgroundColor: theme.colorScheme.primary,
             ),
             child: Text(
               "开始游戏",
-              style: TextStyle(fontSize: 24, color: Colors.white),
+              style:
+                  TextStyle(fontSize: 24, color: theme.colorScheme.onPrimary),
             ),
           ),
         ])),
@@ -127,7 +128,8 @@ class MenuPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
+                ElevatedButton.icon(
+                  icon: Icon(Icons.mood),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -136,26 +138,16 @@ class MenuPage extends StatelessWidget {
                       ),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    backgroundColor: Colors.blueAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    shadowColor: Colors.black.withOpacity(0.3),
-                    elevation: 8,
-                  ),
-                  child: Text(
+                  label: Text(
                     "普通模式",
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
                     ),
                   ),
                 ),
-                SizedBox(height: 20), // 按钮之间的间隔
-                ElevatedButton(
+                SizedBox(height: 10), // 按钮之间的间隔
+                ElevatedButton.icon(
+                  icon: Icon(Icons.sentiment_very_dissatisfied_sharp),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -164,26 +156,16 @@ class MenuPage extends StatelessWidget {
                       ),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    backgroundColor: Colors.redAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    shadowColor: Colors.black.withOpacity(0.3),
-                    elevation: 8,
-                  ),
-                  child: Text(
+                  label: Text(
                     "地狱模式",
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
                     ),
                   ),
                 ),
-                SizedBox(height: 20), // 按钮之间的间隔
-                ElevatedButton(
+                SizedBox(height: 10),
+                ElevatedButton.icon(
+                  icon: Icon(Icons.timer_outlined),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -191,26 +173,16 @@ class MenuPage extends StatelessWidget {
                           builder: (context) => GamePage(mode: "limit")),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    backgroundColor: Colors.greenAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    shadowColor: Colors.black.withOpacity(0.3),
-                    elevation: 8,
-                  ),
-                  child: Text(
+                  label: Text(
                     "限时模式",
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
                     ),
                   ),
                 ),
-                SizedBox(height: 20), // 按钮之间的间隔
-                ElevatedButton(
+                SizedBox(height: 10), // 按钮之间的间隔
+                ElevatedButton.icon(
+                  icon: Icon(Icons.score_outlined),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -219,21 +191,10 @@ class MenuPage extends StatelessWidget {
                       ),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    backgroundColor: Colors.purple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    shadowColor: Colors.black.withOpacity(0.3),
-                    elevation: 8,
-                  ),
-                  child: Text(
+                  label: Text(
                     "最高分",
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
                     ),
                   ),
                 ),
