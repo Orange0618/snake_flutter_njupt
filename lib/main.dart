@@ -143,6 +143,21 @@ class MenuPage extends StatelessWidget {
               ),
               SizedBox(height: 20), // 按钮之间的间隔
               FilledButton.icon(
+                icon: Icon(Icons.sentiment_neutral),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GamePage(mode: "mid"),
+                    ),
+                  );
+                },
+                label: Text(
+                  "进阶模式",
+                ),
+              ),
+              SizedBox(height: 20), // 按钮之间的间隔
+              FilledButton.icon(
                 icon: Icon(Icons.sentiment_very_dissatisfied_sharp),
                 onPressed: () {
                   Navigator.push(
@@ -248,11 +263,14 @@ class GamePageState extends State<GamePage> {
 
   void initializeGame() {
     if (widget.mode == "hell") {
-      obstacles = generateObstacles(10); // 地狱模式障碍物数量减少为 10
-      speed = 150; // 地狱模式更快速度
+      obstacles = generateObstacles(10);
+      speed = 150;
     } else if (widget.mode == "normal") {
-      obstacles = generateObstacles(5); // 普通模式障碍物数量减少为 5
-      speed = 300; // 普通模式速度较慢
+      obstacles = generateObstacles(5);
+      speed = 300;
+    } else if (widget.mode == "mid") {
+      obstacles = generateObstacles(5);
+      speed = 200;
     } else {
       obstacles = generateObstacles(5);
       speed = 300;
@@ -644,14 +662,20 @@ class GamePageState extends State<GamePage> {
                             } else if (point == food) {
                               return LayoutBuilder(
                                 builder: (context, constraints) {
-                                  return Icon(Icons.apple, color: Colors.blue,);
+                                  return Icon(
+                                    Icons.apple,
+                                    color: Colors.blue,
+                                  );
                                 },
                               );
                             } else if (point == specialFood1 ||
                                 point == specialFood2) {
                               return buildSpecialFood(point); // 渲染特殊食物
                             } else if (obstacles.contains(point)) {
-                              return Icon(Icons.warning_rounded, color: Colors.redAccent,);
+                              return Icon(
+                                Icons.warning_rounded,
+                                color: Colors.redAccent,
+                              );
                             } else {
                               return Container();
                             }
