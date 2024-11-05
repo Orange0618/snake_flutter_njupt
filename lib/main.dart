@@ -197,7 +197,7 @@ class MenuPage extends StatelessWidget {
                   );
                 },
                 label: Text(
-                  "最高分",
+                  "  最高分  ",
                 ),
               ),
             ],
@@ -345,6 +345,7 @@ class GamePageState extends State<GamePage> {
       specialFood1 = null;
     }
     if (head == specialFood2) {
+      triggerRandomEffect();
       specialFood2 = null;
     }
   }
