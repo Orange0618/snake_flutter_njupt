@@ -109,12 +109,29 @@ class MenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("菜单"),
+          title: Text(
+            "菜单",
+            style: TextStyle(
+                color: Colors.grey[800],
+                fontWeight: FontWeight.w900,
+                fontStyle: FontStyle.italic,
+                fontFamily: 'Open Sans',
+                fontSize: 40),
+          ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(context); // 返回主页面
             },
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+              image: AssetImage("assets/bar_back.jpeg"),
+              fit: BoxFit.cover,
+            )),
           ),
         ),
         body: Container(
@@ -336,9 +353,11 @@ class GamePageState extends State<GamePage> {
   void checkSpecialFoodEffects() {
     Point<int> head = snake.last;
 
-    if (head == specialFood1 || head == specialFood2) {
+    if (head == specialFood1) {
       triggerRandomEffect();
       specialFood1 = null;
+    }
+    if (head == specialFood2) {
       specialFood2 = null;
     }
   }
@@ -518,7 +537,29 @@ class GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("贪吃蛇游戏 - 分数: $score - 剩余时间：${time == -1 ? "∞" : "$time"}"),
+        title: Text(
+          "分数: $score - 剩余时间：${time == -1 ? "∞" : "$time"}",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                offset: Offset(1, 1),
+                color: const Color.fromARGB(255, 155, 69, 69).withOpacity(0.3),
+                blurRadius: 3,
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+            image: AssetImage("assets/bar_back.jpeg"),
+            fit: BoxFit.cover,
+          )),
+        ),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -527,7 +568,7 @@ class GamePageState extends State<GamePage> {
           },
         ),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: () {
               togglePause();
             },
@@ -535,17 +576,27 @@ class GamePageState extends State<GamePage> {
               isPaused ? "继续" : "暂停", // 根据isAuto的值显示不同文本
               style: TextStyle(color: Colors.black), // 确保文本颜色可见
             ),
+            style: ButtonStyle(
+              // 设置按钮的背景颜色
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  const Color.fromARGB(255, 172, 216, 231)),
+            ),
           ),
           SizedBox(
             width: 20,
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () {
               toggleAi();
             },
             child: Text(
               isAuto ? "关闭辅助" : "开启辅助", // 根据isAuto的值显示不同文本
               style: TextStyle(color: Colors.black), // 确保文本颜色可见
+            ),
+            style: ButtonStyle(
+              // 设置按钮的背景颜色
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  const Color.fromARGB(255, 172, 216, 231)),
             ),
           ),
           SizedBox(
