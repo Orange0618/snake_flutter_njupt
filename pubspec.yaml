@@ -24,3 +24,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+  fonts:
+    - family: ZCOOLKuaiLe
+      fonts:
+        - asset: assets/fonts/ZCOOLKuaiLe-Regular.ttf

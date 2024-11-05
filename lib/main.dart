@@ -14,10 +14,21 @@ class SnakeGame extends StatelessWidget {
     return MaterialApp(
       title: '贪吃蛇游戏',
       theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-          appBarTheme: AppBarTheme(
-              elevation: 4.0,
-              shadowColor: Theme.of(context).colorScheme.shadow)),
+          fontFamily: 'ZCOOLKuaiLe',
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.green,
+          ),
+          filledButtonTheme: FilledButtonThemeData(
+              style: FilledButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 25),
+                  backgroundColor: ColorScheme.fromSeed(
+                    seedColor: Colors.green,
+                  ).primary,
+                  foregroundColor: ColorScheme.fromSeed(
+                    seedColor: Colors.green,
+                  ).onPrimary,
+                  textStyle:
+                      TextStyle(fontSize: 24, fontFamily: 'ZCOOLKuaiLe')))),
       home: MainPage(), // 主页面入口
     );
   }
@@ -29,76 +40,67 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/mainpage_back2.jpg'), // 设置背景图片
-            fit: BoxFit.cover, // 图片填充整个页面
+      body: Center(
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    theme.colorScheme.primary,
+                    theme.colorScheme.primary
+                  ],
+                ).createShader(Offset.zero & bounds.size);
+              },
+              child: Text(
+                '贪吃蛇游戏',
+                style: TextStyle(
+                    fontSize: 60,
+                    fontWeight: FontWeight.bold,
+                    foreground: Paint()
+                      ..style = PaintingStyle.stroke
+                      ..strokeWidth = 6
+                      ..color = theme.colorScheme.surface),
+              ),
+            ),
+            ShaderMask(
+              shaderCallback: (Rect bounds) {
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    theme.colorScheme.surfaceBright,
+                    theme.colorScheme.onPrimary
+                  ],
+                ).createShader(Offset.zero & bounds.size);
+              },
+              child: Text(
+                '贪吃蛇游戏',
+                style: TextStyle(
+                    color: Colors.lightGreen,
+                    fontSize: 60,
+                    fontWeight: FontWeight.bold),
+              ),
+            )
+          ],
+        ),
+        SizedBox(height: 50),
+        FilledButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MenuPage()),
+            );
+          },
+          child: Text(
+            "开始游戏",
           ),
         ),
-        child: Center(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              ShaderMask(
-                shaderCallback: (Rect bounds) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFF8F1FFF), Color(0xFFFF00FF)],
-                  ).createShader(Offset.zero & bounds.size);
-                },
-                child: Text(
-                  '贪吃蛇游戏',
-                  style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      foreground: Paint()
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth = 6
-                        ..color = Colors.white),
-                ),
-              ),
-              ShaderMask(
-                shaderCallback: (Rect bounds) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.white, Color(0xFFFFBDE9)],
-                  ).createShader(Offset.zero & bounds.size);
-                },
-                child: Text(
-                  '贪吃蛇游戏',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold),
-                ),
-              )
-            ],
-          ),
-          SizedBox(height: 50),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MenuPage()),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-              backgroundColor: theme.colorScheme.primary,
-            ),
-            child: Text(
-              "开始游戏",
-              style:
-                  TextStyle(fontSize: 24, color: theme.colorScheme.onPrimary),
-            ),
-          ),
-        ])),
-      ),
+      ])),
     );
   }
 }
@@ -107,16 +109,11 @@ class MainPage extends StatelessWidget {
 class MenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
         appBar: AppBar(
           title: Text(
             "菜单",
-            style: TextStyle(
-                color: Colors.grey[800],
-                fontWeight: FontWeight.w900,
-                fontStyle: FontStyle.italic,
-                fontFamily: 'Open Sans',
-                fontSize: 40),
           ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -124,99 +121,71 @@ class MenuPage extends StatelessWidget {
               Navigator.pop(context); // 返回主页面
             },
           ),
-          backgroundColor: Colors.transparent,
           elevation: 0,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              image: AssetImage("assets/bar_back.jpeg"),
-              fit: BoxFit.cover,
-            )),
-          ),
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/menu_back2.webp'), // 设置背景图片
-              fit: BoxFit.cover, // 图片填充整个页面
-            ),
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton.icon(
-                  icon: Icon(Icons.mood),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => GamePage(mode: "normal"),
-                      ),
-                    );
-                  },
-                  label: Text(
-                    "普通模式",
-                    style: TextStyle(
-                      fontSize: 20,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FilledButton.icon(
+                icon: Icon(Icons.mood),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GamePage(mode: "normal"),
                     ),
-                  ),
+                  );
+                },
+                label: Text(
+                  "普通模式",
                 ),
-                SizedBox(height: 10), // 按钮之间的间隔
-                ElevatedButton.icon(
-                  icon: Icon(Icons.sentiment_very_dissatisfied_sharp),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => GamePage(mode: "hell"),
-                      ),
-                    );
-                  },
-                  label: Text(
-                    "地狱模式",
-                    style: TextStyle(
-                      fontSize: 20,
+              ),
+              SizedBox(height: 20), // 按钮之间的间隔
+              FilledButton.icon(
+                icon: Icon(Icons.sentiment_very_dissatisfied_sharp),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GamePage(mode: "hell"),
                     ),
-                  ),
+                  );
+                },
+                label: Text(
+                  "地狱模式",
                 ),
-                SizedBox(height: 10),
-                ElevatedButton.icon(
-                  icon: Icon(Icons.timer_outlined),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => GamePage(mode: "limit")),
-                    );
-                  },
-                  label: Text(
-                    "限时模式",
-                    style: TextStyle(
-                      fontSize: 20,
+              ),
+              SizedBox(height: 20),
+              FilledButton.icon(
+                icon: Icon(Icons.timer_outlined),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GamePage(mode: "limit")),
+                  );
+                },
+                label: Text(
+                  "限时模式",
+                ),
+              ),
+              SizedBox(height: 20), // 按钮之间的间隔
+              FilledButton.icon(
+                icon: Icon(Icons.score_outlined),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HighScorePage(),
                     ),
-                  ),
+                  );
+                },
+                label: Text(
+                  "最高分",
                 ),
-                SizedBox(height: 10), // 按钮之间的间隔
-                ElevatedButton.icon(
-                  icon: Icon(Icons.score_outlined),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HighScorePage(),
-                      ),
-                    );
-                  },
-                  label: Text(
-                    "最高分",
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ));
   }
@@ -478,13 +447,7 @@ class GamePageState extends State<GamePage> {
   Widget buildSpecialFood(Point<int>? point) {
     return point == null
         ? Container()
-        : Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              image: AssetImage("assets/specialfood.png"),
-              fit: BoxFit.cover,
-            )),
-          );
+        : Icon(Icons.question_mark, color: Colors.yellowAccent);
   }
 
   void ai() {
@@ -535,6 +498,7 @@ class GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -553,13 +517,6 @@ class GamePageState extends State<GamePage> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage("assets/bar_back.jpeg"),
-            fit: BoxFit.cover,
-          )),
-        ),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -568,35 +525,31 @@ class GamePageState extends State<GamePage> {
           },
         ),
         actions: [
-          ElevatedButton(
+          FilledButton(
             onPressed: () {
               togglePause();
             },
-            child: Text(
-              isPaused ? "继续" : "暂停", // 根据isAuto的值显示不同文本
-              style: TextStyle(color: Colors.black), // 确保文本颜色可见
+            style: FilledButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              textStyle: TextStyle(fontSize: 15, fontFamily: "ZCOOLKuaiLe"),
             ),
-            style: ButtonStyle(
-              // 设置按钮的背景颜色
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  const Color.fromARGB(255, 172, 216, 231)),
+            child: Text(
+              isPaused ? "继续" : "暂停",
             ),
           ),
           SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          FilledButton(
             onPressed: () {
               toggleAi();
             },
-            child: Text(
-              isAuto ? "关闭辅助" : "开启辅助", // 根据isAuto的值显示不同文本
-              style: TextStyle(color: Colors.black), // 确保文本颜色可见
+            style: FilledButton.styleFrom(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              textStyle: TextStyle(fontSize: 15, fontFamily: "ZCOOLKuaiLe"),
             ),
-            style: ButtonStyle(
-              // 设置按钮的背景颜色
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  const Color.fromARGB(255, 172, 216, 231)),
+            child: Text(
+              isAuto ? "关闭辅助" : "开启辅助",
             ),
           ),
           SizedBox(
@@ -652,70 +605,58 @@ class GamePageState extends State<GamePage> {
                         direction = 3;
                       }
                     },
-                    child: AspectRatio(
-                      aspectRatio: columnCount / rowCount,
-                      child: GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: rowCount * columnCount,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: columnCount,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          int x = index % columnCount;
-                          int y = index ~/ columnCount;
-                          Point<int> point = Point(x, y);
+                    child: Container(
+                      color: theme.colorScheme.primary,
+                      child: AspectRatio(
+                        aspectRatio: columnCount / rowCount,
+                        child: GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: rowCount * columnCount,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: columnCount,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            int x = index % columnCount;
+                            int y = index ~/ columnCount;
+                            Point<int> point = Point(x, y);
 
-                          if (point == snake.last) {
-                            // Render snake head
-                            return Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('assets/head2.webp'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          } else if (snake.contains(point)) {
-                            // Render snake body
-                            return Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('assets/body2.jpeg'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          } else if (point == food) {
-                            return LayoutBuilder(
-                              builder: (context, constraints) {
-                                return Container(
-                                    decoration: BoxDecoration(
+                            if (point == snake.last) {
+                              // Render snake head
+                              return Container(
+                                decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: AssetImage('assets/food2.png'),
-                                    fit: BoxFit.cover,
+                                    image: AssetImage('assets/head2.webp'),
+                                    fit: BoxFit.fill,
                                   ),
-                                ));
-                              },
-                            );
-                          } else if (point == specialFood1 ||
-                              point == specialFood2) {
-                            return buildSpecialFood(point); // 渲染特殊食物
-                          } else if (obstacles.contains(point)) {
-                            return Container(
-                              decoration: BoxDecoration(
+                                ),
+                              );
+                            } else if (snake.contains(point)) {
+                              // Render snake body
+                              return Container(
+                                decoration: BoxDecoration(
                                   image: DecorationImage(
-                                image: AssetImage('assets/obstacle.webp'),
-                              )),
-                            );
-                          } else {
-                            return Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                image: AssetImage('assets/ground.jpg'),
-                              )),
-                            );
-                          }
-                        },
+                                    image: AssetImage('assets/body2.jpeg'),
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              );
+                            } else if (point == food) {
+                              return LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return Icon(Icons.apple, color: Colors.blue,);
+                                },
+                              );
+                            } else if (point == specialFood1 ||
+                                point == specialFood2) {
+                              return buildSpecialFood(point); // 渲染特殊食物
+                            } else if (obstacles.contains(point)) {
+                              return Icon(Icons.warning_rounded, color: Colors.redAccent,);
+                            } else {
+                              return Container();
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -764,7 +705,7 @@ class HighScorePage extends StatelessWidget {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/high_back.jpg'),
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
           ),
         ),
         child: Center(
