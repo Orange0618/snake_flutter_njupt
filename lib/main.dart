@@ -155,7 +155,7 @@ class MenuPage extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: Colors.pinkAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -164,6 +164,33 @@ class MenuPage extends StatelessWidget {
                   ),
                   child: Text(
                     "普通模式",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20), // 按钮之间的间隔
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GamePage(mode: "mid")),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                    backgroundColor: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    shadowColor: Colors.black.withOpacity(0.3),
+                    elevation: 8,
+                  ),
+                  child: Text(
+                    "进阶模式",
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -238,7 +265,7 @@ class MenuPage extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    backgroundColor: Colors.purple,
+                    backgroundColor: Colors.purpleAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -246,7 +273,7 @@ class MenuPage extends StatelessWidget {
                     elevation: 8,
                   ),
                   child: Text(
-                    "最高分",
+                    "  最高分  ",
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -323,6 +350,9 @@ class GamePageState extends State<GamePage> {
     } else if (widget.mode == "normal") {
       obstacles = generateObstacles(5); // 普通模式障碍物数量减少为 5
       speed = 300; // 普通模式速度较慢
+    } else if (widget.mode == "mid") {
+      obstacles = generateObstacles(5); // 普通模式障碍物数量减少为 5
+      speed = 200; // 普通模式速度较慢
     } else {
       obstacles = generateObstacles(5);
       speed = 300;
@@ -797,6 +827,15 @@ class HighScorePage extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context); // 返回菜单页面
           },
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+            image: AssetImage("assets/bar_back.jpeg"),
+            fit: BoxFit.cover,
+          )),
         ),
       ),
       body: Container(
