@@ -40,67 +40,81 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      body: Center(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            ShaderMask(
-              shaderCallback: (Rect bounds) {
-                return LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    theme.colorScheme.primary,
-                    theme.colorScheme.primary
-                  ],
-                ).createShader(Offset.zero & bounds.size);
-              },
-              child: Text(
-                '贪吃蛇游戏',
-                style: TextStyle(
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                    foreground: Paint()
-                      ..style = PaintingStyle.stroke
-                      ..strokeWidth = 6
-                      ..color = theme.colorScheme.surface),
-              ),
-            ),
-            ShaderMask(
-              shaderCallback: (Rect bounds) {
-                return LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    theme.colorScheme.surfaceBright,
-                    theme.colorScheme.onPrimary
-                  ],
-                ).createShader(Offset.zero & bounds.size);
-              },
-              child: Text(
-                '贪吃蛇游戏',
-                style: TextStyle(
-                    color: Colors.lightGreen,
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold),
-              ),
-            )
-          ],
-        ),
-        SizedBox(height: 50),
-        FilledButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MenuPage()),
-            );
-          },
-          child: Text(
-            "开始游戏",
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/mainpage_back.jpg'), // 背景图片
+            fit: BoxFit.cover, // 使图片填充整个页面
           ),
         ),
-      ])),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  ShaderMask(
+                    shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          theme.colorScheme.primary,
+                          theme.colorScheme.primary
+                        ],
+                      ).createShader(Offset.zero & bounds.size);
+                    },
+                    child: Text(
+                      '贪吃蛇游戏',
+                      style: TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.bold,
+                        foreground: Paint()
+                          ..style = PaintingStyle.stroke
+                          ..strokeWidth = 6
+                          ..color = theme.colorScheme.surface,
+                      ),
+                    ),
+                  ),
+                  ShaderMask(
+                    shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          theme.colorScheme.surface,
+                          theme.colorScheme.onPrimary,
+                        ],
+                      ).createShader(Offset.zero & bounds.size);
+                    },
+                    child: Text(
+                      '贪吃蛇游戏',
+                      style: TextStyle(
+                        color: Colors.lightGreen,
+                        fontSize: 60,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 50),
+              FilledButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MenuPage()),
+                  );
+                },
+                child: Text(
+                  "开始游戏",
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -111,19 +125,26 @@ class MenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "菜单",
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context); // 返回主页面
-            },
-          ),
-          elevation: 0,
+      appBar: AppBar(
+        title: Text(
+          "菜单",
         ),
-        body: Center(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // 返回主页面
+          },
+        ),
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/menupage_back.jpg'), // 设置背景图片
+            fit: BoxFit.cover, // 图片填充整个页面
+          ),
+        ),
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -202,7 +223,10 @@ class MenuPage extends StatelessWidget {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
+    ;
   }
 }
 
@@ -662,20 +686,32 @@ class GamePageState extends State<GamePage> {
                             } else if (point == food) {
                               return LayoutBuilder(
                                 builder: (context, constraints) {
-                                  return Icon(
-                                    Icons.apple,
-                                    color: Colors.blue,
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                      image: AssetImage('assets/food2.png'),
+                                      fit: BoxFit.fill,
+                                    )),
                                   );
                                 },
                               );
                             } else if (point == specialFood1 ||
                                 point == specialFood2) {
-                              return buildSpecialFood(point); // 渲染特殊食物
+                              return Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                      image: AssetImage('assets/specialfood.png'),
+                                      fit: BoxFit.fill,
+                                    )),
+                                  );
                             } else if (obstacles.contains(point)) {
-                              return Icon(
-                                Icons.warning_rounded,
-                                color: Colors.redAccent,
-                              );
+                              return Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                      image: AssetImage('assets/obstacle.png'),
+                                      fit: BoxFit.fill,
+                                    )),
+                                  );
                             } else {
                               return Container();
                             }
