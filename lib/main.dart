@@ -336,6 +336,21 @@ class GamePageState extends State<GamePage> {
     }
   }
 
+  void _showSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      action: SnackBarAction(
+        label: '关闭',
+        onPressed: () {
+          // 点击关闭按钮后的处理
+        },
+      ),
+      duration: Duration(seconds: 3),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   // 检查特殊食物效果
   void checkSpecialFoodEffects() {
     Point<int> head = snake.last;
@@ -357,6 +372,7 @@ class GamePageState extends State<GamePage> {
       case 0: // 加速效果
         setState(() {
           speed = speed - 100;
+          _showSnackBar(context, "加速 5 秒");
           startGame();
         });
         Timer(Duration(seconds: 5), () {
@@ -369,6 +385,7 @@ class GamePageState extends State<GamePage> {
       case 1: // 减速效果
         setState(() {
           speed = speed + 100;
+          _showSnackBar(context, "减速 5 秒");
           startGame();
         });
         Timer(Duration(seconds: 5), () {
@@ -381,6 +398,7 @@ class GamePageState extends State<GamePage> {
       case 2: // 缩短效果
         if (snake.length > 3) {
           snake.removeAt(0); // 移除蛇尾
+          _showSnackBar(context, "缩短 1 格");
         }
         break;
     }
