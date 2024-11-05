@@ -641,64 +641,67 @@ class GamePageState extends State<GamePage> {
                         direction = 3;
                       }
                     },
-                    child: Container(
-                      color: theme.colorScheme.primary,
-                      child: AspectRatio(
-                        aspectRatio: columnCount / rowCount,
-                        child: GridView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: rowCount * columnCount,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: columnCount,
-                          ),
-                          itemBuilder: (BuildContext context, int index) {
-                            int x = index % columnCount;
-                            int y = index ~/ columnCount;
-                            Point<int> point = Point(x, y);
-
-                            if (point == snake.last) {
-                              // Render snake head
-                              return Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage('assets/head2.webp'),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              );
-                            } else if (snake.contains(point)) {
-                              // Render snake body
-                              return Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage('assets/body2.jpeg'),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              );
-                            } else if (point == food) {
-                              return LayoutBuilder(
-                                builder: (context, constraints) {
-                                  return Icon(
-                                    Icons.apple,
-                                    color: Colors.blue,
-                                  );
-                                },
-                              );
-                            } else if (point == specialFood1 ||
-                                point == specialFood2) {
-                              return buildSpecialFood(point); // 渲染特殊食物
-                            } else if (obstacles.contains(point)) {
-                              return Icon(
-                                Icons.warning_rounded,
-                                color: Colors.redAccent,
-                              );
-                            } else {
-                              return Container();
-                            }
-                          },
+                    child: AspectRatio(
+                      aspectRatio: columnCount / rowCount,
+                      child: GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: rowCount * columnCount,
+                        gridDelegate:
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: columnCount,
                         ),
+                        itemBuilder: (BuildContext context, int index) {
+                          int x = index % columnCount;
+                          int y = index ~/ columnCount;
+                          Point<int> point = Point(x, y);
+                    
+                          if (point == snake.last) {
+                            // Render snake head
+                            return Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/head2.webp'),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            );
+                          } else if (snake.contains(point)) {
+                            // Render snake body
+                            return Container(
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/body2.jpeg'),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            );
+                          } else if (point == food) {
+                            return LayoutBuilder(
+                              builder: (context, constraints) {
+                                return Icon(
+                                  Icons.apple,
+                                  color: Colors.blue,
+                                );
+                              },
+                            );
+                          } else if (point == specialFood1 ||
+                              point == specialFood2) {
+                            return buildSpecialFood(point); // 渲染特殊食物
+                          } else if (obstacles.contains(point)) {
+                            return Icon(
+                              Icons.warning_rounded,
+                              color: Colors.redAccent,
+                            );
+                          } else {
+                            return Container(
+                              margin: const EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primaryFixed,
+                                shape: BoxShape.rectangle,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
