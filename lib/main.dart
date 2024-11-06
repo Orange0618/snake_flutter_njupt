@@ -682,6 +682,7 @@ class GamePageState extends State<GamePage> {
                           if (point == snake.last) {
                             // Render snake head
                             return Container(
+                              margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: AssetImage('assets/head2.webp'),
@@ -692,6 +693,7 @@ class GamePageState extends State<GamePage> {
                           } else if (snake.contains(point)) {
                             // Render snake body
                             return Container(
+                              margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: AssetImage('assets/body2.jpeg'),
@@ -703,7 +705,9 @@ class GamePageState extends State<GamePage> {
                             return LayoutBuilder(
                               builder: (context, constraints) {
                                 return Container(
+                                  margin: const EdgeInsets.all(1),
                                   decoration: BoxDecoration(
+                                    color: theme.colorScheme.primaryFixed,
                                       image: DecorationImage(
                                     image: AssetImage('assets/food2.png'),
                                     fit: BoxFit.fill,
@@ -714,26 +718,30 @@ class GamePageState extends State<GamePage> {
                           } else if (point == specialFood1 ||
                               point == specialFood2) {
                             return Container(
+                              margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
+                                  color: theme.colorScheme.primaryFixed,
                                   image: DecorationImage(
-                                image: AssetImage('assets/specialfood.png'),
-                                fit: BoxFit.fill,
-                              )),
+                                    image: AssetImage('assets/specialfood.png'),
+                                    fit: BoxFit.fill,
+                                  )),
                             );
                           } else if (obstacles.contains(point)) {
                             return Container(
+                              margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                image: AssetImage('assets/obstacle.png'),
-                                fit: BoxFit.fill,
-                              )),
+                                color: theme.colorScheme.primaryFixed,
+                                image: DecorationImage(
+                                  image: AssetImage('assets/obstacle.png'),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                             );
                           } else {
                             return Container(
                               margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
                                 color: theme.colorScheme.primaryFixed,
-                                shape: BoxShape.rectangle,
                               ),
                             );
                           }
