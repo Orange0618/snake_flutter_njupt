@@ -360,6 +360,21 @@ class GamePageState extends State<GamePage> {
     }
   }
 
+  void _showSnackBar(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      action: SnackBarAction(
+        label: '关闭',
+        onPressed: () {
+          // 点击关闭按钮后的处理
+        },
+      ),
+      duration: Duration(seconds: 3),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   // 检查特殊食物效果
   void checkSpecialFoodEffects() {
     Point<int> head = snake.last;
@@ -382,6 +397,7 @@ class GamePageState extends State<GamePage> {
       case 0: // 加速效果
         setState(() {
           speed = speed - 100;
+          _showSnackBar(context, "加速 5 秒");
           startGame();
         });
         Timer(Duration(seconds: 5), () {
@@ -394,6 +410,7 @@ class GamePageState extends State<GamePage> {
       case 1: // 减速效果
         setState(() {
           speed = speed + 100;
+          _showSnackBar(context, "减速 5 秒");
           startGame();
         });
         Timer(Duration(seconds: 5), () {
@@ -406,6 +423,7 @@ class GamePageState extends State<GamePage> {
       case 2: // 缩短效果
         if (snake.length > 3) {
           snake.removeAt(0); // 移除蛇尾
+          _showSnackBar(context, "缩短 1 格");
         }
         break;
     }
@@ -648,76 +666,86 @@ class GamePageState extends State<GamePage> {
                         direction = 3;
                       }
                     },
-                    child: Container(
-                      color: theme.colorScheme.primary,
-                      child: AspectRatio(
-                        aspectRatio: columnCount / rowCount,
-                        child: GridView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: rowCount * columnCount,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: columnCount,
-                          ),
-                          itemBuilder: (BuildContext context, int index) {
-                            int x = index % columnCount;
-                            int y = index ~/ columnCount;
-                            Point<int> point = Point(x, y);
-
-                            if (point == snake.last) {
-                              // Render snake head
-                              return Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage('assets/head2.webp'),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              );
-                            } else if (snake.contains(point)) {
-                              // Render snake body
-                              return Container(
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage('assets/body2.jpeg'),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              );
-                            } else if (point == food) {
-                              return LayoutBuilder(
-                                builder: (context, constraints) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                      image: AssetImage('assets/food2.png'),
-                                      fit: BoxFit.fill,
-                                    )),
-                                  );
-                                },
-                              );
-                            } else if (point == specialFood1 ||
-                                point == specialFood2) {
-                              return Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                      image: AssetImage('assets/specialfood.png'),
-                                      fit: BoxFit.fill,
-                                    )),
-                                  );
-                            } else if (obstacles.contains(point)) {
-                              return Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                      image: AssetImage('assets/obstacle.png'),
-                                      fit: BoxFit.fill,
-                                    )),
-                                  );
-                            } else {
-                              return Container();
-                            }
-                          },
+                    child: AspectRatio(
+                      aspectRatio: columnCount / rowCount,
+                      child: GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: rowCount * columnCount,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: columnCount,
                         ),
+                        itemBuilder: (BuildContext context, int index) {
+                          int x = index % columnCount;
+                          int y = index ~/ columnCount;
+                          Point<int> point = Point(x, y);
+
+                          if (point == snake.last) {
+                            // Render snake head
+                            return Container(
+                              margin: const EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/head2.webp'),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            );
+                          } else if (snake.contains(point)) {
+                            // Render snake body
+                            return Container(
+                              margin: const EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage('assets/body2.jpeg'),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            );
+                          } else if (point == food) {
+                            return LayoutBuilder(
+                              builder: (context, constraints) {
+                                return Container(
+                                  margin: const EdgeInsets.all(1),
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.primaryFixed,
+                                      image: DecorationImage(
+                                    image: AssetImage('assets/food2.png'),
+                                    fit: BoxFit.fill,
+                                  )),
+                                );
+                              },
+                            );
+                          } else if (point == specialFood1 ||
+                              point == specialFood2) {
+                            return Container(
+                              margin: const EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                  color: theme.colorScheme.primaryFixed,
+                                  image: DecorationImage(
+                                    image: AssetImage('assets/specialfood.png'),
+                                    fit: BoxFit.fill,
+                                  )),
+                            );
+                          } else if (obstacles.contains(point)) {
+                            return Container(
+                              margin: const EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primaryFixed,
+                                image: DecorationImage(
+                                  image: AssetImage('assets/obstacle.png'),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            );
+                          } else {
+                            return Container(
+                              margin: const EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primaryFixed,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
