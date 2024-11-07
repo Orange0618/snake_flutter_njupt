@@ -16,5 +16,5 @@ class Node {
           y == other.y;
 
   @override
-  int get hashCode => x.hashCode ^ y.hashCode;
+  int get hashCode => x * 31 + y;
 }

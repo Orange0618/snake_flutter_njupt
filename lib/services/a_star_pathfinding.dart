@@ -1,6 +1,6 @@
 import 'dart:math';
-import 'priority_queue.dart';
-import 'node.dart';
+import '../models/priority_queue.dart';
+import '../models/node.dart';
 
 int aStarPathfinding(
     int rowCount,

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tanchishe/ai/a_star_pathfinding.dart';
+import 'package:tanchishe/services/a_star_pathfinding.dart';
 
 class GamePage extends StatefulWidget {
   final String mode; // 模式类型："normal" 、 "hell" 或 "limit"
@@ -240,11 +240,7 @@ class GamePageState extends State<GamePage> {
         newHead = Point(snake.last.x + 1, snake.last.y);
     }
     snake.add(newHead);
-    print(newHead.x.toString() +
-        " and " +
-        newHead.y.toString() +
-        " duration " +
-        direction.toString());
+    print("${newHead.x} and ${newHead.y} duration $direction");
     snake.removeAt(0);
   }
 
