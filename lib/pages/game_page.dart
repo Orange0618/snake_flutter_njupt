@@ -436,20 +436,26 @@ class GamePageState extends State<GamePage> {
                       }
                     },
                     child: AspectRatio(
+                      // 设置长宽比，使网格适配屏幕比例
                       aspectRatio: columnCount / rowCount,
                       child: GridView.builder(
+                        // 禁止网格滚动
                         physics: const NeverScrollableScrollPhysics(),
+                        // 设置网格项目总数
                         itemCount: rowCount * columnCount,
+                        // 设置网格布局，每行显示的项目数为columnCount
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: columnCount,
                         ),
+                        // 网格项目的构建方法
                         itemBuilder: (BuildContext context, int index) {
+                          // 计算网格中的x, y位置
                           int x = index % columnCount;
                           int y = index ~/ columnCount;
                           Point<int> point = Point(x, y);
 
                           if (point == snake.last) {
-                            // Render snake head
+                            // 如果当前位置是蛇头，渲染蛇头图片
                             return Container(
                               margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
@@ -460,7 +466,7 @@ class GamePageState extends State<GamePage> {
                               ),
                             );
                           } else if (snake.contains(point)) {
-                            // Render snake body
+                            // 如果当前位置是蛇身，渲染蛇身图片
                             return Container(
                               margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
@@ -471,31 +477,36 @@ class GamePageState extends State<GamePage> {
                               ),
                             );
                           } else if (point == food) {
+                            // 如果当前位置是食物，渲染食物图片
                             return LayoutBuilder(
                               builder: (context, constraints) {
                                 return Container(
                                   margin: const EdgeInsets.all(1),
                                   decoration: BoxDecoration(
                                     color: theme.colorScheme.primaryFixed,
-                                      image: DecorationImage(
-                                    image: AssetImage('assets/food2.png'),
-                                    fit: BoxFit.fill,
-                                  )),
+                                    image: DecorationImage(
+                                      image: AssetImage('assets/food2.png'),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
                                 );
                               },
                             );
                           } else if (point == specialFood1 ||
                               point == specialFood2) {
+                            // 如果当前位置是特殊食物，渲染特殊食物图片
                             return Container(
                               margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                  color: theme.colorScheme.primaryFixed,
-                                  image: DecorationImage(
-                                    image: AssetImage('assets/specialfood.png'),
-                                    fit: BoxFit.fill,
-                                  )),
+                                color: theme.colorScheme.primaryFixed,
+                                image: DecorationImage(
+                                  image: AssetImage('assets/specialfood.png'),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                             );
                           } else if (obstacles.contains(point)) {
+                            // 如果当前位置是障碍物，渲染障碍物图片
                             return Container(
                               margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
@@ -507,6 +518,7 @@ class GamePageState extends State<GamePage> {
                               ),
                             );
                           } else {
+                            // 如果当前位置为空，渲染默认背景颜色
                             return Container(
                               margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
