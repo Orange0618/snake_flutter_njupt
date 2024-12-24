@@ -1,6 +1,6 @@
 # tanchishe
 
-A new Flutter project.
+A new Flutter project to complete njupt lab week
 
 ## Getting Started
 
